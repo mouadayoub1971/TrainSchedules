@@ -1,4 +1,4 @@
-## azoul , set the password of the database and username puis ce primer l'extension txm et le remplace par yml ### 
+## azoul , set the password of the database and username puis ce primer l'extension txm et le remplace par yml ###
 
 spring:
   datasource:
