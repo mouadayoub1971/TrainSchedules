@@ -6,16 +6,22 @@ import jakarta.persistence.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer Id ;
-    private String firstName ;
-    private String secondName ;
+    private Integer Id;
+
+    private String firstName;
+    private String secondName;
+
     @Column(unique = true)
-    private String email ;
+    private String email;
+
     private Boolean admin;
 
-    public User() {
-    }
+    private String password;
 
+    // Default constructor
+    public User() {}
+
+    // Constructor with parameters (without password)
     public User(Boolean admin, String email, String secondName, String firstName) {
         this.admin = admin;
         this.email = email;
@@ -23,6 +29,16 @@ public class User {
         this.firstName = firstName;
     }
 
+    // Constructor with all fields
+    public User(Boolean admin, String email, String secondName, String firstName, String password) {
+        this.admin = admin;
+        this.email = email;
+        this.secondName = secondName;
+        this.firstName = firstName;
+        this.password = password;
+    }
+
+    // Getters and setters
     public Integer getId() {
         return Id;
     }
@@ -61,5 +77,13 @@ public class User {
 
     public void setAdmin(Boolean admin) {
         this.admin = admin;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
