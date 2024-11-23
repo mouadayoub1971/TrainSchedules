@@ -1,6 +1,8 @@
 package com.mouad.train.Schedules;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,6 +23,18 @@ public interface TrainSchedulesRepository extends JpaRepository<TrainSchedules, 
     // Find schedules within a specific departure time range
     List<TrainSchedules> findByDepartureTimeBetween(LocalDateTime startTime, LocalDateTime endTime);
 
-    // Find schedules by cost (if needed)
+    // Find schedules by cost
     List<TrainSchedules> findByCost(Double cost);
+
+    // Find schedules that conflict with a specific time range for a train
+    @Query("SELECT s FROM TrainSchedules s " +
+            "WHERE s.trainId = :trainId " +
+            "AND (s.departureTime < :endTime AND s.arrivalTime > :startTime)")
+    List<TrainSchedules> findConflictingSchedules(
+            @Param("trainId") Integer trainId,
+            @Param("startTime") LocalDateTime startTime,
+            @Param("endTime") LocalDateTime endTime);
+
+    // Find schedules marked as available
+    List<TrainSchedules> findByAvailableTrue();
 }

@@ -72,6 +72,18 @@ public class TrainSchedulesController {
     // Add a new schedule
     @PostMapping
     public TrainSchedules addSchedule(@RequestBody TrainSchedules trainSchedule) {
+        // Check for conflicting schedules
+        List<TrainSchedules> conflictingSchedules = trainSchedulesRepository.findConflictingSchedules(
+                trainSchedule.getTrainId(),
+                trainSchedule.getDepartureTime(),
+                trainSchedule.getArrivalTime()
+        );
+
+        if (!conflictingSchedules.isEmpty()) {
+            throw new RuntimeException("Conflict detected with existing schedules for this train.");
+        }
+
+        // Save the schedule if no conflicts are found
         return trainSchedulesRepository.save(trainSchedule);
     }
 }

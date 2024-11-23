@@ -22,18 +22,23 @@ public class TrainSchedules {
     @Column(nullable = false)
     private Double cost;
 
+    // New field
+    @Column(nullable = false)
+    private boolean available;
+
     // Default constructor
     public TrainSchedules() {}
 
     // Constructor with parameters
     public TrainSchedules(Integer trainId, String departure, String destination,
-                          LocalDateTime departureTime, LocalDateTime arrivalTime, Double cost) {
+                          LocalDateTime departureTime, LocalDateTime arrivalTime, Double cost, boolean available) {
         this.trainId = trainId;
         this.departure = departure;
         this.destination = destination;
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
         this.cost = cost;
+        this.available = available;
     }
 
     // Getters and setters
@@ -91,5 +96,13 @@ public class TrainSchedules {
 
     public void setCost(Double cost) {
         this.cost = cost;
+    }
+
+    public boolean isAvailable() {
+        return available;
+    }
+
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 }
