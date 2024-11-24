@@ -15,24 +15,24 @@ public class Train {
     private Integer capacity;
 
     @Column(nullable = false)
-    private Boolean active;
+    private String status; // e.g., "active", "cancelled", "completed"
 
     public Train() {}
 
     // Constructor with all parameters (excluding ID)
-    public Train(String trainName, String trainType, Integer capacity, Boolean active) {
+    public Train(String trainName, String trainType, Integer capacity, String status) {
         this.trainName = trainName;
         this.trainType = trainType;
         this.capacity = capacity;
-        this.active = active;
+        this.status = status;
     }
 
-    public Train(Integer id, String trainName, String trainType, Integer capacity, Boolean active) {
+    public Train(Integer id, String trainName, String trainType, Integer capacity, String status) {
         this.id = id;
         this.trainName = trainName;
         this.trainType = trainType;
         this.capacity = capacity;
-        this.active = active;
+        this.status = status;
     }
 
     public Integer getId() {
@@ -67,11 +67,11 @@ public class Train {
         this.capacity = capacity;
     }
 
-    public Boolean getActive() {
-        return active;
+    public String getStatus() {
+        return status;
     }
 
-    public void setActive(Boolean active) {
-        this.active = active;
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

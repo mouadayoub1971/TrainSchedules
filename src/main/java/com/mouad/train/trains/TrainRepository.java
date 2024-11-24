@@ -13,6 +13,9 @@ public interface TrainRepository extends JpaRepository<Train, Integer> {
     // Find trains by both name and type
     List<Train> findByTrainNameAndTrainType(String trainName, String trainType);
 
-    // Find active or inactive trains
-    List<Train> findByActive(Boolean active);
+    // Find trains by status
+    List<Train> findByStatus(String status);
+
+    // Find trains by multiple statuses (e.g., "active", "inactive")
+    List<Train> findByStatusIn(List<String> statuses);
 }
