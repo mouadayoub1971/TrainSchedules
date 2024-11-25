@@ -1,5 +1,6 @@
 package com.mouad.train.Schedules;
 
+import com.mouad.train.trains.Train;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
@@ -10,8 +11,9 @@ public class TrainSchedules {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "train_id", nullable = false)
-    private Integer trainId;
+    @ManyToOne // This establishes a foreign key relationship with the Train entity
+    @JoinColumn(name = "train_id", nullable = false)
+    private Train train; // Reference to Train entity (many bookings can belong to one train)
 
     private String departure;
     private String destination;
@@ -30,9 +32,9 @@ public class TrainSchedules {
     public TrainSchedules() {}
 
     // Constructor with parameters
-    public TrainSchedules(Integer trainId, String departure, String destination,
+    public TrainSchedules(Train train, String departure, String destination,
                           LocalDateTime departureTime, LocalDateTime arrivalTime, Double cost, boolean available) {
-        this.trainId = trainId;
+        this.train = train;
         this.departure = departure;
         this.destination = destination;
         this.departureTime = departureTime;
@@ -50,12 +52,12 @@ public class TrainSchedules {
         this.id = id;
     }
 
-    public Integer getTrainId() {
-        return trainId;
+    public Train getTrain() {
+        return train;
     }
 
-    public void setTrainId(Integer trainId) {
-        this.trainId = trainId;
+    public void setTrain(Train train) {
+        this.train = train;
     }
 
     public String getDeparture() {

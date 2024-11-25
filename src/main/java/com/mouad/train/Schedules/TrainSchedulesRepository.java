@@ -1,5 +1,6 @@
 package com.mouad.train.Schedules;
 
+import com.mouad.train.trains.Train;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -8,8 +9,8 @@ import java.util.List;
 
 public interface TrainSchedulesRepository extends JpaRepository<TrainSchedules, Integer> {
 
-    // Find schedules by train ID
-    List<TrainSchedules> findByTrainId(Integer trainId);
+    // Find schedules by train entity
+    List<TrainSchedules> findByTrain(Train train);
 
     // Find schedules by departure location
     List<TrainSchedules> findByDeparture(String departure);
@@ -28,10 +29,10 @@ public interface TrainSchedulesRepository extends JpaRepository<TrainSchedules, 
 
     // Find schedules that conflict with a specific time range for a train
     @Query("SELECT s FROM TrainSchedules s " +
-            "WHERE s.trainId = :trainId " +
+            "WHERE s.train = :train " +
             "AND (s.departureTime < :endTime AND s.arrivalTime > :startTime)")
     List<TrainSchedules> findConflictingSchedules(
-            @Param("trainId") Integer trainId,
+            @Param("train") Train train,
             @Param("startTime") LocalDateTime startTime,
             @Param("endTime") LocalDateTime endTime);
 

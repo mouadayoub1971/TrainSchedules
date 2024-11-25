@@ -1,5 +1,7 @@
 package com.mouad.train.Schedules;
 
+import com.mouad.train.trains.Train;
+import com.mouad.train.trains.TrainRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,16 +17,21 @@ public class TrainSchedulesController {
     @Autowired
     private TrainSchedulesRepository trainSchedulesRepository;
 
+    @Autowired
+    private TrainRepository trainRepository;
+
     // Get all schedules
     @GetMapping
     public List<TrainSchedules> getAllSchedules() {
         return trainSchedulesRepository.findAll();
     }
 
-    // Get schedules by train ID
+    // Get schedules by train (using Train object)
     @GetMapping("/train/{trainId}")
     public List<TrainSchedules> getSchedulesByTrainId(@PathVariable Integer trainId) {
-        return trainSchedulesRepository.findByTrainId(trainId);
+        Train train = trainRepository.findById(trainId)
+                .orElseThrow(() -> new RuntimeException("Train not found with ID: " + trainId));
+        return trainSchedulesRepository.findByTrain(train);
     }
 
     // Get schedules by departure location
@@ -74,7 +81,7 @@ public class TrainSchedulesController {
     public TrainSchedules addSchedule(@RequestBody TrainSchedules trainSchedule) {
         // Check for conflicting schedules
         List<TrainSchedules> conflictingSchedules = trainSchedulesRepository.findConflictingSchedules(
-                trainSchedule.getTrainId(),
+                trainSchedule.getTrain(),
                 trainSchedule.getDepartureTime(),
                 trainSchedule.getArrivalTime()
         );

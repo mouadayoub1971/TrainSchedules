@@ -13,6 +13,10 @@ spring:
         format_sql: true
     database: mysql
     database-platform: org.hibernate.dialect.MySQLDialect
+  jackson:
+    serialization:
+      FAIL_ON_SELF_REFERENCES: false
+
 kafka:
   bootstrap-servers: localhost:9092
   consumer:
