@@ -149,7 +149,7 @@ public class BookingController {
         try {
             bookingStatus = Enums.BookingStatus.valueOf(status.toUpperCase());
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // Invalid status
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
         List<Booking> bookings = bookingRepository.findByStatus(bookingStatus);

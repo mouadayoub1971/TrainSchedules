@@ -5,7 +5,7 @@ import com.mouad.train.users.User;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import com.mouad.train.Enums.Enums;
-import com.mouad.train.Schedules.TrainSchedules; // Assuming this is the TrainSchedules entity
+import com.mouad.train.Schedules.TrainSchedules;
 
 @Entity
 public class Booking {
