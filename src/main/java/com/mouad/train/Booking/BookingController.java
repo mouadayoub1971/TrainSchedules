@@ -3,14 +3,12 @@ package com.mouad.train.Booking;
 import com.mouad.train.Enums.Enums;
 import com.mouad.train.Schedules.TrainSchedules;
 import com.mouad.train.Schedules.TrainSchedulesRepository;
-import com.mouad.train.trains.Train;
-import com.mouad.train.trains.TrainRepository;
 import com.mouad.train.users.User;
 import com.mouad.train.users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -26,10 +24,7 @@ public class BookingController {
     private UserRepository userRepository;
 
     @Autowired
-    private TrainRepository trainRepository;
-
-    @Autowired
-    private TrainSchedulesRepository trainScheduleRepository;
+    private TrainSchedulesRepository trainSchedulesRepository;
 
     // Get all bookings
     @GetMapping
@@ -41,118 +36,107 @@ public class BookingController {
     // Get booking by ID
     @GetMapping("/{id}")
     public ResponseEntity<Booking> getBookingById(@PathVariable Integer id) {
-        Booking booking = bookingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Booking not found with ID: " + id));
-        return ResponseEntity.ok(booking);
+        return bookingRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
     }
 
     // Create a new booking
     @PostMapping
-    public ResponseEntity<Booking> createBooking(@RequestBody Booking bookingRequest) {
-        // Validate user
-        User user = userRepository.findById(bookingRequest.getUser().getId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public ResponseEntity<?> createBooking(@RequestBody Booking bookingRequest) {
+        try {
+            User user = validateUser(bookingRequest.getUser().getId());
+            TrainSchedules schedule = validateSchedule(bookingRequest.getSchedule().getId());
 
-        // Validate train
-        Train train = trainRepository.findById(bookingRequest.getTrain().getId())
-                .orElseThrow(() -> new RuntimeException("Train not found"));
+            validateSeatAvailability(schedule, bookingRequest.getNumberOfSeats());
 
-        // Validate schedule
-        TrainSchedules schedule = trainScheduleRepository.findById(bookingRequest.getSchedule().getId())
-                .orElseThrow(() -> new RuntimeException("Schedule not found"));
+            bookingRequest.setUser(user);
+            bookingRequest.setSchedule(schedule);
+            bookingRequest.setBookingTime(LocalDateTime.now());
+            bookingRequest.setStatus(Enums.BookingStatus.CONFIRMED);
 
-        // Check seat availability
-        int bookedSeats = bookingRepository.findByTrain(train).stream()
-                .mapToInt(Booking::getNumberOfSeats)
-                .sum();
-
-        int availableSeats = train.getCapacity() - bookedSeats;
-        if (bookingRequest.getNumberOfSeats() > availableSeats) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(null); // Not enough seats available
+            Booking savedBooking = bookingRepository.save(bookingRequest);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedBooking);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
+    }
 
-        // Set booking time and default status
-        bookingRequest.setBookingTime(LocalDateTime.now());
-        bookingRequest.setStatus(Enums.BookingStatus.CONFIRMED);
+    // Update a booking
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateBooking(@PathVariable Integer id, @RequestBody Booking bookingRequest) {
+        try {
+            Booking existingBooking = validateBooking(id);
+            User user = validateUser(bookingRequest.getUser().getId());
+            TrainSchedules schedule = validateSchedule(bookingRequest.getSchedule().getId());
 
-        // Save the new booking
-        Booking savedBooking = bookingRepository.save(bookingRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedBooking);
+            validateSeatAvailability(schedule, bookingRequest.getNumberOfSeats());
+
+            existingBooking.setUser(user);
+            existingBooking.setSchedule(schedule);
+            existingBooking.setNumberOfSeats(bookingRequest.getNumberOfSeats());
+            existingBooking.setBookingTime(LocalDateTime.now());
+            existingBooking.setStatus(Enums.BookingStatus.CONFIRMED);
+
+            Booking updatedBooking = bookingRepository.save(existingBooking);
+            return ResponseEntity.ok(updatedBooking);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     // Update booking status
     @PutMapping("/{id}/status")
-    public ResponseEntity<Booking> updateBookingStatus(@PathVariable Integer id, @RequestParam String status) {
-        Booking booking = bookingRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Booking not found with ID: " + id));
-
+    public ResponseEntity<?> updateBookingStatus(@PathVariable Integer id, @RequestParam String status) {
         try {
-            // Convert status String to enum
+            Booking booking = validateBooking(id);
             Enums.BookingStatus bookingStatus = Enums.BookingStatus.valueOf(status.toUpperCase());
-            booking.setStatus(bookingStatus);
-        } catch (IllegalArgumentException e) {
-            // Handle invalid status
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
 
-        Booking updatedBooking = bookingRepository.save(booking);
-        return ResponseEntity.ok(updatedBooking);
+            booking.setStatus(bookingStatus);
+            Booking updatedBooking = bookingRepository.save(booking);
+            return ResponseEntity.ok(updatedBooking);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid booking status: " + status);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
-    // Delete booking
+    // Delete a booking
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteBooking(@PathVariable Integer id) {
+    public ResponseEntity<?> deleteBooking(@PathVariable Integer id) {
         if (!bookingRepository.existsById(id)) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Booking not found with ID: " + id);
         }
-
         bookingRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
 
-    // Check availability for a specific train schedule
-    @GetMapping("/availability/{scheduleId}")
-    public ResponseEntity<String> checkAvailability(@PathVariable Integer scheduleId) {
-        TrainSchedules schedule = trainScheduleRepository.findById(scheduleId)
-                .orElseThrow(() -> new RuntimeException("Schedule not found with ID: " + scheduleId));
-
-        Train train = trainRepository.findById(schedule.getTrain().getId())
-                .orElseThrow(() -> new RuntimeException("Train not found"));
-
-        int bookedSeats = bookingRepository.findBySchedule(schedule).stream()
-                .mapToInt(Booking::getNumberOfSeats).sum();
-
-        int availableSeats = train.getCapacity() - bookedSeats;
-
-        if (availableSeats > 0) {
-            return ResponseEntity.ok("Seats available: " + availableSeats);
-        } else {
-            return ResponseEntity.status(HttpStatus.OK).body("No seats available for schedule ID: " + scheduleId);
-        }
+    // Helper methods for validation
+    private User validateUser(Integer userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + userId));
     }
 
-    // Get bookings by user ID
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Booking>> getBookingsByUserId(@PathVariable Integer userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
-
-        List<Booking> bookings = bookingRepository.findByUser(user);
-        return ResponseEntity.ok(bookings);
+    private TrainSchedules validateSchedule(Integer scheduleId) {
+        return trainSchedulesRepository.findById(scheduleId)
+                .orElseThrow(() -> new RuntimeException("Train schedule not found with ID: " + scheduleId));
     }
 
-    // Get bookings by status
-    @GetMapping("/status/{status}")
-    public ResponseEntity<List<Booking>> getBookingsByStatus(@PathVariable String status) {
-        Enums.BookingStatus bookingStatus;
-        try {
-            bookingStatus = Enums.BookingStatus.valueOf(status.toUpperCase());
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
+    private Booking validateBooking(Integer bookingId) {
+        return bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found with ID: " + bookingId));
+    }
 
-        List<Booking> bookings = bookingRepository.findByStatus(bookingStatus);
-        return ResponseEntity.ok(bookings);
+    private void validateSeatAvailability(TrainSchedules schedule, Integer requestedSeats) {
+        int totalBookedSeats = bookingRepository.findBySchedule(schedule)
+                .stream()
+                .mapToInt(Booking::getNumberOfSeats)
+                .sum();
+        int availableSeats = schedule.getTrain().getCapacity() - totalBookedSeats;
+
+        if (requestedSeats > availableSeats) {
+            throw new RuntimeException("Not enough available seats. Only " + availableSeats + " seats left.");
+        }
     }
 }
