@@ -3,6 +3,8 @@ package com.mouad.train.Booking;
 import com.mouad.train.Enums.Enums;
 import com.mouad.train.Schedules.TrainSchedules;
 import com.mouad.train.Schedules.TrainSchedulesRepository;
+import com.mouad.train.trains.Train;
+import com.mouad.train.trains.TrainRepository;
 import com.mouad.train.users.User;
 import com.mouad.train.users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +28,9 @@ public class BookingController {
     @Autowired
     private TrainSchedulesRepository trainSchedulesRepository;
 
+    @Autowired
+    private TrainRepository trainRepository;
+
     // Get all bookings
     @GetMapping
     public ResponseEntity<List<Booking>> getAllBookings() {
@@ -39,6 +44,24 @@ public class BookingController {
         return bookingRepository.findById(id)
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body(null));
+    }
+
+    // Get bookings by train
+    @GetMapping("/train/{trainId}")
+    public ResponseEntity<?> getBookingsByTrain(@PathVariable Integer trainId) {
+        try {
+            Train train = trainRepository.findById(trainId)
+                    .orElseThrow(() -> new RuntimeException("Train not found with ID: " + trainId));
+
+            List<TrainSchedules> schedules = trainSchedulesRepository.findByTrain(train);
+            List<Booking> bookings = schedules.stream()
+                    .flatMap(schedule -> bookingRepository.findBySchedule(schedule).stream())
+                    .toList();
+
+            return ResponseEntity.ok(bookings);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 
     // Create a new booking
@@ -70,7 +93,8 @@ public class BookingController {
             User user = validateUser(bookingRequest.getUser().getId());
             TrainSchedules schedule = validateSchedule(bookingRequest.getSchedule().getId());
 
-            validateSeatAvailability(schedule, bookingRequest.getNumberOfSeats());
+            // Calculate seat availability considering the current booking
+            validateSeatAvailabilityForUpdate(schedule, bookingRequest.getNumberOfSeats(), existingBooking.getNumberOfSeats());
 
             existingBooking.setUser(user);
             existingBooking.setSchedule(schedule);
@@ -84,6 +108,23 @@ public class BookingController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
+    // Helper methods for validation
+    private void validateSeatAvailabilityForUpdate(TrainSchedules schedule, Integer requestedSeats, Integer currentSeats) {
+        int trainCapacity = schedule.getTrain().getCapacity();
+        int totalBookedSeats = bookingRepository.findBySchedule(schedule)
+                .stream()
+                .mapToInt(Booking::getNumberOfSeats)
+                .sum();
+
+        // Adjust the booked seats by subtracting the current booking's seats
+        int availableSeats = trainCapacity - (totalBookedSeats - currentSeats);
+
+        if (requestedSeats > availableSeats) {
+            throw new RuntimeException("Not enough available seats. Only " + availableSeats + " seats left.");
+        }
+    }
+
 
     // Update booking status
     @PutMapping("/{id}/status")
@@ -129,11 +170,12 @@ public class BookingController {
     }
 
     private void validateSeatAvailability(TrainSchedules schedule, Integer requestedSeats) {
+        int trainCapacity = schedule.getTrain().getCapacity();
         int totalBookedSeats = bookingRepository.findBySchedule(schedule)
                 .stream()
                 .mapToInt(Booking::getNumberOfSeats)
                 .sum();
-        int availableSeats = schedule.getTrain().getCapacity() - totalBookedSeats;
+        int availableSeats = trainCapacity - totalBookedSeats;
 
         if (requestedSeats > availableSeats) {
             throw new RuntimeException("Not enough available seats. Only " + availableSeats + " seats left.");
