@@ -108,6 +108,52 @@ public class BookingController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+    // Get all train schedules with available seats
+    @GetMapping("/schedules")
+    public ResponseEntity<?> getSchedulesWithAvailableSeats() {
+        try {
+            // Fetch all train schedules
+            List<TrainSchedules> schedules = trainSchedulesRepository.findAll();
+
+            // Map each schedule to its available seats
+            List<ScheduleDetails> scheduleDetails = schedules.stream()
+                    .map(schedule -> {
+                        int trainCapacity = schedule.getTrain().getCapacity(); // Train capacity
+                        int bookedSeats = bookingRepository.findBySchedule(schedule) // Total booked seats for this schedule
+                                .stream()
+                                .mapToInt(Booking::getNumberOfSeats)
+                                .sum();
+                        int seatsLeft = trainCapacity - bookedSeats;
+
+                        return new ScheduleDetails(schedule, seatsLeft);
+                    })
+                    .toList();
+
+            return ResponseEntity.ok(scheduleDetails);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
+
+    // Inner class to represent schedule details
+    public static class ScheduleDetails {
+        private final TrainSchedules schedule;
+        private final int seatsLeft;
+
+        public ScheduleDetails(TrainSchedules schedule, int seatsLeft) {
+            this.schedule = schedule;
+            this.seatsLeft = seatsLeft;
+        }
+
+        public TrainSchedules getSchedule() {
+            return schedule;
+        }
+
+        public int getSeatsLeft() {
+            return seatsLeft;
+        }
+    }
+
 
     // Helper methods for validation
     private void validateSeatAvailabilityForUpdate(TrainSchedules schedule, Integer requestedSeats, Integer currentSeats) {
