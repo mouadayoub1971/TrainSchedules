@@ -1,6 +1,9 @@
 package com.mouad.train.trains;
 
+import com.mouad.train.Schedules.TrainSchedules;
 import jakarta.persistence.*;
+
+import java.util.Collection;
 
 @Entity
 public class Train {
@@ -74,4 +77,5 @@ public class Train {
     public void setStatus(String status) {
         this.status = status;
     }
+
 }

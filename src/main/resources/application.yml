@@ -13,6 +13,7 @@ spring:
         format_sql: true
     database: mysql
     database-platform: org.hibernate.dialect.MySQLDialect
+
   kafka:
     consumer:
       bootstrap-servers: localhost:9092
