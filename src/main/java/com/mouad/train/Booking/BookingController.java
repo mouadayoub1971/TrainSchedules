@@ -1,12 +1,15 @@
 package com.mouad.train.Booking;
 
 import com.mouad.train.Enums.Enums;
+import com.mouad.train.Log.LogsGene;
+import com.mouad.train.Producer.KafkaProducer;
 import com.mouad.train.Schedules.TrainSchedules;
 import com.mouad.train.Schedules.TrainSchedulesRepository;
 import com.mouad.train.trains.Train;
 import com.mouad.train.trains.TrainRepository;
 import com.mouad.train.users.User;
 import com.mouad.train.users.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +20,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/bookings")
+@RequiredArgsConstructor
 public class BookingController {
-
+    public final KafkaProducer kafkaProducer;
+    public final LogsGene logsGene;
     @Autowired
     private BookingRepository bookingRepository;
 
@@ -67,6 +72,7 @@ public class BookingController {
     // Create a new booking
     @PostMapping
     public ResponseEntity<?> createBooking(@RequestBody Booking bookingRequest) {
+        String Messsage;
         try {
             User user = validateUser(bookingRequest.getUser().getId());
             TrainSchedules schedule = validateSchedule(bookingRequest.getSchedule().getId());
@@ -79,6 +85,16 @@ public class BookingController {
             bookingRequest.setStatus(Enums.BookingStatus.CONFIRMED);
 
             Booking savedBooking = bookingRepository.save(bookingRequest);
+            Messsage = logsGene.generateLog("INFO", "BookingController", "user email" + user.getEmail(), "details: "+ schedule.getDeparture() + " -> " + schedule.getDestination() + "  ;" );
+            kafkaProducer.sendMessage(Messsage);
+            Messsage = logsGene.generateLog("INFO", "BookingController", "trip:" + schedule.getDestination() + "->" + schedule.getDestination(), "details: " + schedule.getTrain());
+            kafkaProducer.sendMessage(Messsage);
+            Messsage = logsGene.generateLog("INFO", "BookingController", "timing:" + schedule.getDepartureTime() + "->" + schedule.getArrivalTime(), "details: " + schedule.getTrain());
+            kafkaProducer.sendMessage(Messsage);
+            Messsage = logsGene.generateLog("INFO", "BookingController", "depart:" + schedule.getDestination() , "details: " + schedule.getTrain());
+            kafkaProducer.sendMessage(Messsage);
+            Messsage = logsGene.generateLog("INFO", "BookingController", "arrive:" + schedule.getDeparture() , "details: " + schedule.getTrain());
+            kafkaProducer.sendMessage(Messsage);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedBooking);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -88,6 +104,7 @@ public class BookingController {
     // Update a booking
     @PutMapping("/{id}")
     public ResponseEntity<?> updateBooking(@PathVariable Integer id, @RequestBody Booking bookingRequest) {
+        String Messsage;
         try {
             Booking existingBooking = validateBooking(id);
             User user = validateUser(bookingRequest.getUser().getId());
@@ -103,6 +120,16 @@ public class BookingController {
             existingBooking.setStatus(Enums.BookingStatus.CONFIRMED);
 
             Booking updatedBooking = bookingRepository.save(existingBooking);
+            Messsage = logsGene.generateLog("INFO", "BookingControllerUpdated", "user email" + user.getEmail(), "details: "+ schedule.getDeparture() + " -> " + schedule.getDestination() + "  ;" );
+            kafkaProducer.sendMessage(Messsage);
+            Messsage = logsGene.generateLog("INFO", "BookingControllerUpdated", "trip:" + schedule.getDestination() + "->" + schedule.getDestination(), "details: " + schedule.getTrain());
+            kafkaProducer.sendMessage(Messsage);
+            Messsage = logsGene.generateLog("INFO", "BookingControllerUpdated", "timing:" + schedule.getDepartureTime() + "->" + schedule.getArrivalTime(), "details: " + schedule.getTrain());
+            kafkaProducer.sendMessage(Messsage);
+            Messsage = logsGene.generateLog("INFO", "BookingControllerUpdated", "depart:" + schedule.getDestination() , "details: " + schedule.getTrain());
+            kafkaProducer.sendMessage(Messsage);
+            Messsage = logsGene.generateLog("INFO", "BookingControllerUpdated", "arrive:" + schedule.getDeparture() , "details: " + schedule.getTrain());
+            kafkaProducer.sendMessage(Messsage);
             return ResponseEntity.ok(updatedBooking);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
@@ -175,12 +202,15 @@ public class BookingController {
     // Update booking status
     @PutMapping("/{id}/status")
     public ResponseEntity<?> updateBookingStatus(@PathVariable Integer id, @RequestParam String status) {
+        String Messsage;
         try {
             Booking booking = validateBooking(id);
             Enums.BookingStatus bookingStatus = Enums.BookingStatus.valueOf(status.toUpperCase());
 
             booking.setStatus(bookingStatus);
             Booking updatedBooking = bookingRepository.save(booking);
+            Messsage = logsGene.generateLog("INFO", "BookingControllerUpdatedStatus", booking.getStatus() + "->" + updatedBooking.getStatus()  , "details: ");
+            kafkaProducer.sendMessage(Messsage);
             return ResponseEntity.ok(updatedBooking);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid booking status: " + status);
@@ -192,10 +222,13 @@ public class BookingController {
     // Delete a booking
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteBooking(@PathVariable Integer id) {
+        String Messsage;
         if (!bookingRepository.existsById(id)) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Booking not found with ID: " + id);
         }
         bookingRepository.deleteById(id);
+        Messsage = logsGene.generateLog("INFO", "BookingControllerDelete", "Delete a booking"  , "details: ");
+        kafkaProducer.sendMessage(Messsage);
         return ResponseEntity.noContent().build();
     }
 
