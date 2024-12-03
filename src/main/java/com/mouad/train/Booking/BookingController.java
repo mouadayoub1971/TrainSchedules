@@ -87,13 +87,17 @@ public class BookingController {
             Booking savedBooking = bookingRepository.save(bookingRequest);
             Messsage = logsGene.generateLog("INFO", "BookingController", "user email" + user.getEmail(), "details: "+ schedule.getDeparture() + " -> " + schedule.getDestination() + "  ;" );
             kafkaProducer.sendMessage(Messsage);
-            Messsage = logsGene.generateLog("INFO", "BookingController", "trip:" + schedule.getDestination() + "->" + schedule.getDestination(), "details: " + schedule.getTrain());
+            Messsage = logsGene.generateLog("INFO", "BookingController", "trip:" + schedule.getDeparture() + "->" + schedule.getDestination(), "details: " + schedule.getTrain().getTrainName());
             kafkaProducer.sendMessage(Messsage);
-            Messsage = logsGene.generateLog("INFO", "BookingController", "timing:" + schedule.getDepartureTime() + "->" + schedule.getArrivalTime(), "details: " + schedule.getTrain());
+            Messsage = logsGene.generateLog("INFO", "BookingController", String.format(
+                    "timing:%s -> %s ",
+                    schedule.getDepartureTime().toString(),
+                    schedule.getArrivalTime().toString()
+            ), "details: " + schedule.getTrain().getTrainName());
             kafkaProducer.sendMessage(Messsage);
-            Messsage = logsGene.generateLog("INFO", "BookingController", "depart:" + schedule.getDestination() , "details: " + schedule.getTrain());
+            Messsage = logsGene.generateLog("INFO", "BookingController", "depart:" + schedule.getDestination() , "details: " + schedule.getTrain().getTrainName());
             kafkaProducer.sendMessage(Messsage);
-            Messsage = logsGene.generateLog("INFO", "BookingController", "arrive:" + schedule.getDeparture() , "details: " + schedule.getTrain());
+            Messsage = logsGene.generateLog("INFO", "BookingController", "arrive:" + schedule.getDeparture() , "details: " + schedule.getTrain().getTrainName());
             kafkaProducer.sendMessage(Messsage);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedBooking);
         } catch (Exception e) {

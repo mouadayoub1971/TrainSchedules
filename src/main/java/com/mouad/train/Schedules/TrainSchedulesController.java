@@ -78,7 +78,8 @@ public class TrainSchedulesController {
 
     // Add a new schedule
     @PostMapping
-    public TrainSchedules addSchedule(@RequestBody TrainSchedules trainSchedule) {
+    public TrainSchedules addSchedule(
+            @RequestBody TrainSchedules trainSchedule) {
         // Check for conflicting schedules
         List<TrainSchedules> conflictingSchedules = trainSchedulesRepository.findConflictingSchedules(
                 trainSchedule.getTrain(),
