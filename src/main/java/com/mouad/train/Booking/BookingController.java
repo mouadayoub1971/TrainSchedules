@@ -9,6 +9,7 @@ import com.mouad.train.trains.Train;
 import com.mouad.train.trains.TrainRepository;
 import com.mouad.train.users.User;
 import com.mouad.train.users.UserRepository;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -69,52 +70,63 @@ public class BookingController {
         }
     }
 
-    // Create a new booking
+    // Create booking
     @PostMapping
     public ResponseEntity<?> createBooking(@RequestBody Booking bookingRequest) {
-        String Messsage;
         try {
+            // Validate User and Schedule
             User user = validateUser(bookingRequest.getUser().getId());
             TrainSchedules schedule = validateSchedule(bookingRequest.getSchedule().getId());
 
+            // Validate seat availability
             validateSeatAvailability(schedule, bookingRequest.getNumberOfSeats());
 
+            // Create booking
             bookingRequest.setUser(user);
             bookingRequest.setSchedule(schedule);
             bookingRequest.setBookingTime(LocalDateTime.now());
             bookingRequest.setStatus(Enums.BookingStatus.CONFIRMED);
 
             Booking savedBooking = bookingRepository.save(bookingRequest);
-            Messsage = logsGene.generateLog("INFO", "BookingController", "user email" + user.getEmail(), "details: "+ schedule.getDeparture() + " -> " + schedule.getDestination() + "  ;" );
-            kafkaProducer.sendMessage(Messsage);
-            Messsage = logsGene.generateLog("INFO", "BookingController", "trip:" + schedule.getDeparture() + "->" + schedule.getDestination(), "details: " + schedule.getTrain().getTrainName());
-            kafkaProducer.sendMessage(Messsage);
-            Messsage = logsGene.generateLog("INFO", "BookingController", String.format(
-                    "timing:%s -> %s ",
-                    schedule.getDepartureTime().toString(),
-                    schedule.getArrivalTime().toString()
-            ), "details: " + schedule.getTrain().getTrainName());
-            kafkaProducer.sendMessage(Messsage);
-            Messsage = logsGene.generateLog("INFO", "BookingController", "depart:" + schedule.getDestination() , "details: " + schedule.getTrain().getTrainName());
-            kafkaProducer.sendMessage(Messsage);
-            Messsage = logsGene.generateLog("INFO", "BookingController", "arrive:" + schedule.getDeparture() , "details: " + schedule.getTrain().getTrainName());
-            kafkaProducer.sendMessage(Messsage);
+
+            // Log schedule path and booked seats
+            String scheduleLog = String.format(
+                    "Schedule Details: Path: %s -> %s, Train: %s, Timing: %s -> %s, Seats Booked: %d",
+                    schedule.getDeparture(),
+                    schedule.getDestination(),
+                    schedule.getTrain().getTrainName(),
+                    schedule.getDepartureTime(),
+                    schedule.getArrivalTime(),
+                    bookingRequest.getNumberOfSeats()
+            );
+            kafkaProducer.sendMessage(logsGene.generateLog("INFO", "BookingController", scheduleLog, "Schedule Info"));
+
+            // Log user details
+            String userLog = String.format(
+                    "User Details: Email: %s, Booking ID: %d",
+                    user.getEmail(),
+                    savedBooking.getId()
+            );
+            kafkaProducer.sendMessage(logsGene.generateLog("INFO", "BookingController", userLog, "User Info"));
+
+            // Return the created booking
             return ResponseEntity.status(HttpStatus.CREATED).body(savedBooking);
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An unexpected error occurred: " + e.getMessage());
         }
     }
 
     // Update a booking
     @PutMapping("/{id}")
     public ResponseEntity<?> updateBooking(@PathVariable Integer id, @RequestBody Booking bookingRequest) {
-        String Messsage;
         try {
             Booking existingBooking = validateBooking(id);
             User user = validateUser(bookingRequest.getUser().getId());
             TrainSchedules schedule = validateSchedule(bookingRequest.getSchedule().getId());
 
-            // Calculate seat availability considering the current booking
+            // Validate seat availability for update
             validateSeatAvailabilityForUpdate(schedule, bookingRequest.getNumberOfSeats(), existingBooking.getNumberOfSeats());
 
             existingBooking.setUser(user);
@@ -124,21 +136,33 @@ public class BookingController {
             existingBooking.setStatus(Enums.BookingStatus.CONFIRMED);
 
             Booking updatedBooking = bookingRepository.save(existingBooking);
-            Messsage = logsGene.generateLog("INFO", "BookingControllerUpdated", "user email" + user.getEmail(), "details: "+ schedule.getDeparture() + " -> " + schedule.getDestination() + "  ;" );
-            kafkaProducer.sendMessage(Messsage);
-            Messsage = logsGene.generateLog("INFO", "BookingControllerUpdated", "trip:" + schedule.getDestination() + "->" + schedule.getDestination(), "details: " + schedule.getTrain());
-            kafkaProducer.sendMessage(Messsage);
-            Messsage = logsGene.generateLog("INFO", "BookingControllerUpdated", "timing:" + schedule.getDepartureTime() + "->" + schedule.getArrivalTime(), "details: " + schedule.getTrain());
-            kafkaProducer.sendMessage(Messsage);
-            Messsage = logsGene.generateLog("INFO", "BookingControllerUpdated", "depart:" + schedule.getDestination() , "details: " + schedule.getTrain());
-            kafkaProducer.sendMessage(Messsage);
-            Messsage = logsGene.generateLog("INFO", "BookingControllerUpdated", "arrive:" + schedule.getDeparture() , "details: " + schedule.getTrain());
-            kafkaProducer.sendMessage(Messsage);
+
+            // Log schedule path and booked seats
+            String scheduleLog = String.format(
+                    "Updated Schedule: Path: %s -> %s, Train: %s, Timing: %s -> %s, Seats Updated: %d",
+                    schedule.getDeparture(),
+                    schedule.getDestination(),
+                    schedule.getTrain().getTrainName(),
+                    schedule.getDepartureTime(),
+                    schedule.getArrivalTime(),
+                    bookingRequest.getNumberOfSeats()
+            );
+            kafkaProducer.sendMessage(logsGene.generateLog("INFO", "BookingControllerUpdated", scheduleLog, "Schedule Info"));
+
+            // Log user details
+            String userLog = String.format(
+                    "Updated User: Email: %s, Booking ID: %d",
+                    user.getEmail(),
+                    updatedBooking.getId()
+            );
+            kafkaProducer.sendMessage(logsGene.generateLog("INFO", "BookingControllerUpdated", userLog, "User Info"));
+
             return ResponseEntity.ok(updatedBooking);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
     }
+
     // Get all train schedules with available seats
     @GetMapping("/schedules")
     public ResponseEntity<?> getSchedulesWithAvailableSeats() {
@@ -167,6 +191,7 @@ public class BookingController {
     }
 
     // Inner class to represent schedule details
+    @Getter
     public static class ScheduleDetails {
         private final TrainSchedules schedule;
         private final int seatsLeft;
@@ -176,13 +201,6 @@ public class BookingController {
             this.seatsLeft = seatsLeft;
         }
 
-        public TrainSchedules getSchedule() {
-            return schedule;
-        }
-
-        public int getSeatsLeft() {
-            return seatsLeft;
-        }
     }
 
 
