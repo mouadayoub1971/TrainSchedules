@@ -16,7 +16,7 @@
 }
 
 .custom-text-field:focused {
-    -fx-border-color: transparent transparent #007bff transparent;
+    -fx-border-color: transparent transparent #FFD700 transparent;
 }
 
 .login-button {
@@ -38,6 +38,37 @@
 }
 
 .login-button:pressed {
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 0);
+}
+
+.error-label {
+    -fx-font-size: 12px;
+    -fx-text-fill: #ff4444;
+    -fx-padding: 5px;
+}
+
+.custom-button {
+    -fx-background-color: linear-gradient(to right, #FFD700, #FFA500);
+    -fx-text-fill: #242526;
+    -fx-font-size: 14px;
+    -fx-padding: 10px 20px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+    -fx-min-height: 45px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 8, 0, 0, 0);
+}
+
+.custom-button:hover {
+    -fx-background-color: linear-gradient(to right, #FFA500, #FFD700);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.4), 10, 0, 0, 0);
+}
+
+.custom-button:pressed {
     -fx-scale-x: 0.98;
     -fx-scale-y: 0.98;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 0);
