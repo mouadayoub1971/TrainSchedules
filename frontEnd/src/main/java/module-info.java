@@ -13,7 +13,6 @@ module com.mouad.frontend {
     requires java.net.http;
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.annotation;
-
     opens com.mouad.frontend to javafx.fxml;
     opens com.mouad.frontend.Controllers.Admin to javafx.fxml;
     opens com.mouad.frontend.Controllers.Client to javafx.fxml; 

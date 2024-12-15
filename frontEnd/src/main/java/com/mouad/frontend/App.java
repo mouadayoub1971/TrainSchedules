@@ -26,9 +26,6 @@ public class App extends Application {
         Model.getInstance().getViewsFactory().Reservation();
     }
 
-    public static void main(String[] args) {
-        launch(args);
-    }
 
     public static void main(String[] args) {
         launch(args);
