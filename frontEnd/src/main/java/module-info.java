@@ -3,8 +3,15 @@ module com.mouad.frontend {
     requires transitive javafx.fxml;
     requires transitive javafx.graphics;
     requires de.jensd.fx.glyphs.fontawesome;
-    requires java.net.http;
+    requires java.sql;
+    requires mysql.connector.j;
+    requires kafka.clients;
+    requires org.json;
+    requires org.apache.httpcomponents.client5.httpclient5;
     requires com.fasterxml.jackson.databind;
+    requires org.apache.httpcomponents.core5.httpcore5;
+    requires com.fasterxml.jackson.datatype.jsr310;
+    requires java.net.http;
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.annotation;
     requires org.apache.httpcomponents.core5.httpcore5;
