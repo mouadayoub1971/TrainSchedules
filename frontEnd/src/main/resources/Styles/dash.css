@@ -1,0 +1,39 @@
+.root {
+    -fx-background-color: #090909;
+
+}
+
+.card {
+    -fx-background-color:linear-gradient(to right, #2b303c, #525968);
+    /*-fx-background-color:linear-gradient(to bottom right, #272b3f, #256b51);*/
+
+    -fx-background-radius:5px;
+    -fx-border-radius: 8px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 10, 0, 0, 0);
+    -fx-alignment: center;
+
+}
+
+.table {
+    -fx-background-color: transparent;
+}
+
+.column {
+    -fx-background-color:linear-gradient(to right, #2b303c, #525968);
+    /*-fx-background-color:linear-gradient(to bottom right, #272b3f, #256b51);*/
+    -fx-text-fill: #f2f2f2;
+}
+
+.table-row-cell {
+    -fx-background-color: #3B3B3B;
+    -fx-text-fill: #f2f2f2;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #4B4B4B;
+}
+
+.label {
+    -fx-text-fill: #FFDAB9;
+    -fx-alignment: center;
+}
