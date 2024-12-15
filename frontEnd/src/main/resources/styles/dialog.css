@@ -1,0 +1,184 @@
+.dialog-container {
+    -fx-background-color: #2e2f30;
+    -fx-padding: 30;
+}
+
+.dialog-title {
+    -fx-text-fill: #da9020;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+/* Form Elements */
+.form-label {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.form-field {
+    -fx-background-color: #2b2b2b;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #808080;
+    -fx-border-color: #808080;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 5 10;
+}
+
+.form-field:focused {
+    -fx-border-color: #da9020;
+    -fx-border-width: 2;
+}
+
+/* ComboBox Styles */
+.form-combo {
+    -fx-background-color: #2b2b2b;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #808080;
+    -fx-border-color: #808080;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+
+.form-combo:focused {
+    -fx-border-color: #da9020;
+    -fx-border-width: 2;
+}
+
+.form-combo .list-cell {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+}
+
+.form-combo .list-view {
+    -fx-background-color: #2b2b2b;
+    -fx-border-color: #da9020;
+    -fx-border-width: 1;
+}
+
+.form-combo .list-view .list-cell:hover {
+    -fx-background-color: #da9020;
+}
+
+.form-combo .list-view .list-cell:selected {
+    -fx-background-color: #c17f1c;
+}
+
+.form-combo .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.form-combo .arrow {
+    -fx-background-color: #da9020;
+}
+
+/* Spinner Styles */
+.form-spinner {
+    -fx-background-color: #2b2b2b;
+    -fx-text-fill: white;
+}
+
+.form-spinner .increment-arrow-button,
+.form-spinner .decrement-arrow-button {
+    -fx-background-color: #da9020;
+    -fx-background-radius: 0;
+}
+
+.form-spinner .increment-arrow-button:hover,
+.form-spinner .decrement-arrow-button:hover {
+    -fx-background-color: #c17f1c;
+}
+
+.form-spinner .increment-arrow,
+.form-spinner .decrement-arrow {
+    -fx-background-color: white;
+}
+
+/* Details Section */
+.details-section {
+    -fx-background-color: #2b2b2b;
+    -fx-padding: 15;
+    -fx-spacing: 10;
+    -fx-background-radius: 5;
+    -fx-border-color: #da9020;
+    -fx-border-radius: 5;
+    -fx-border-width: 1;
+}
+
+.section-title {
+    -fx-text-fill: #da9020;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.details-label {
+    -fx-text-fill: #808080;
+    -fx-font-size: 13px;
+}
+
+.details-value {
+    -fx-text-fill: white;
+    -fx-font-size: 13px;
+}
+
+/* Error Label */
+.error-label {
+    -fx-text-fill: #ff4444;
+    -fx-font-size: 12px;
+    -fx-padding: 5 0 0 0;
+}
+
+/* Dialog Buttons */
+.dialog-button {
+    -fx-padding: 8 20;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+    -fx-min-width: 100;
+}
+
+.save-button {
+    -fx-background-color: #da9020;
+    -fx-text-fill: white;
+}
+
+.save-button:hover {
+    -fx-background-color: #c17f1c;
+}
+
+.cancel-button {
+    -fx-background-color: transparent;
+    -fx-border-color: #dc3545;
+    -fx-border-radius: 5;
+    -fx-text-fill: #dc3545;
+}
+
+.cancel-button:hover {
+    -fx-background-color: #dc3545;
+    -fx-text-fill: white;
+}
+
+/* Search Field */
+.search-field {
+    -fx-background-color: #2b2b2b;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #808080;
+    -fx-border-color: #808080;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 5 10;
+}
+
+.search-field:focused {
+    -fx-border-color: #da9020;
+    -fx-border-width: 2;
+}
+
+/* Disabled State */
+.form-combo:disabled,
+.form-spinner:disabled,
+.dialog-button:disabled {
+    -fx-opacity: 0.5;
+}

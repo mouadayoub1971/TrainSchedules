@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" spacing="15" style="-fx-background-color: #2e2f30;" 
+      stylesheets="@../../styles/MainPage.css"
+      xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.mouad.frontend.Controllers.Admin.BookingEditDialogController">
+    <padding>
+        <Insets bottom="20" left="20" right="20" top="20" />
+    </padding>
+    
+    <Label text="Edit Booking" textFill="#da9020">
+        <font>
+            <Font name="System Bold" size="18.0" />
+        </font>
+    </Label>
+    
+    <GridPane hgap="10" vgap="10">
+        <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="100" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="200" />
+        </columnConstraints>
+        
+        <!-- User Email (Read-only) -->
+        <Label styleClass="form-label" text="User:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="0">
+            <font>
+                <Font name="System Bold" size="14.0" />
+            </font>
+        </Label>
+        <TextField fx:id="userField" editable="false" styleClass="form-field" style="-fx-text-fill: white !important; -fx-control-inner-background: #3e3f40 !important; -fx-prompt-text-fill: white !important;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        
+        <!-- Schedule Selection -->
+        <Label styleClass="form-label" text="Schedule:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="1">
+            <font>
+                <Font name="System Bold" size="14.0" />
+            </font>
+        </Label>
+        <ComboBox fx:id="scheduleComboBox" maxWidth="Infinity" promptText="Select Schedule" styleClass="form-field" style="-fx-text-fill: white !important; -fx-background-color: #3e3f40 !important; -fx-prompt-text-fill: white !important;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        
+        <!-- Number of Seats -->
+        <Label styleClass="form-label" text="Seats:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="2">
+            <font>
+                <Font name="System Bold" size="14.0" />
+            </font>
+        </Label>
+        <Spinner fx:id="seatsSpinner" editable="true" initialValue="1" max="10" min="1" styleClass="form-field" style="-fx-text-fill: white !important; -fx-control-inner-background: #3e3f40 !important; -fx-prompt-text-fill: white !important;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        
+        <!-- Status -->
+        <Label styleClass="form-label" text="Status:" textFill="WHITE" GridPane.columnIndex="0" GridPane.rowIndex="3">
+            <font>
+                <Font name="System Bold" size="14.0" />
+            </font>
+        </Label>
+        <ComboBox fx:id="statusComboBox" maxWidth="Infinity" promptText="Select Status" styleClass="form-field" style="-fx-text-fill: white !important; -fx-background-color: #3e3f40 !important; -fx-prompt-text-fill: white !important;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        
+        <!-- Schedule Details Section -->
+        <VBox spacing="10" styleClass="details-section" GridPane.columnSpan="2" GridPane.rowIndex="4">
+            <GridPane hgap="10" vgap="5">
+                <columnConstraints>
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="100" />
+                    <ColumnConstraints hgrow="SOMETIMES" minWidth="200" />
+                </columnConstraints>
+                
+                <Label styleClass="details-label" text="Train:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <Label fx:id="trainNameLabel" styleClass="details-value" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                
+                <Label styleClass="details-label" text="Route:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                <Label fx:id="routeLabel" styleClass="details-value" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                
+                <Label styleClass="details-label" text="Time:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+                <Label fx:id="timeLabel" styleClass="details-value" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                
+                <Label styleClass="details-label" text="Available Seats:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+                <Label fx:id="availableSeatsLabel" styleClass="details-value" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                
+                <Label styleClass="details-label" text="Cost:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+                <Label fx:id="costLabel" styleClass="details-value" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            </GridPane>
+        </VBox>
+    </GridPane>
+    
+    <HBox alignment="CENTER" spacing="10">
+        <Button fx:id="saveButton" onAction="#onSave" styleClass="gold-button" text="Save" />
+        <Button fx:id="cancelButton" onAction="#onCancel" styleClass="cancel-button" text="Cancel" />
+    </HBox>
+</VBox>

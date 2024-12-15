@@ -1,14 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import java.util.*?>
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
-            xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.mouad.frontend.Controllers.Admin.AdminController"
-            prefHeight="400.0" prefWidth="600.0">
+<VBox minHeight="600.0" minWidth="900.0" style="-fx-background-color: #242526;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mouad.frontend.Controllers.Admin.AdminController">
+   <children>
+      <HBox alignment="CENTER_LEFT" spacing="0" VBox.vgrow="ALWAYS">
+         <children>
+            <VBox alignment="CENTER" prefHeight="600.0" prefWidth="79.0" spacing="10" style="-fx-background-color: #da9020;" VBox.vgrow="ALWAYS">
+               <children>
+                  <ImageView fitHeight="26.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/homepage.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/user_2.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/calendar_1.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/files.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="notificationBell" fitHeight="21.0" fitWidth="24.0" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/notification_1.png" />
+                     </image>
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                  </ImageView>
+                  <ImageView fitHeight="25.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/turn-off.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </VBox>
+            <VBox alignment="TOP_CENTER" spacing="10" style="-fx-background-color: #242526;" VBox.vgrow="ALWAYS">
+               <children>
+                  <ImageView fitHeight="64.0" fitWidth="567.0" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/TrainMaster.png" />
+                     </image>
+                  </ImageView>
+                  <Button graphicTextGap="50.0" mnemonicParsing="false" onAction="#shutDown" prefHeight="55.0" prefWidth="40.0" style="-fx-background-color: transparent;" stylesheets="@../resources/style.css" textAlignment="RIGHT" textFill="#ebebeb" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+               </children>
+            </VBox>
+            <VBox alignment="TOP_CENTER" spacing="10" style="-fx-background-color: #242526;" VBox.vgrow="ALWAYS">
+               <children>
+                  <ImageView fitHeight="64.0" fitWidth="567.0" preserveRatio="true">
+                     <image>
+                        <Image url="@../resources/background.jpg" />
+                     </image>
+                  </ImageView>
+                  <Button graphicTextGap="50.0" mnemonicParsing="false" onAction="#shutDown" prefHeight="55.0" prefWidth="40.0" style="-fx-background-color: transparent;" stylesheets="@../resources/style.css" textAlignment="RIGHT" textFill="#ebebeb" HBox.hgrow="ALWAYS">
+                     <font>
+                        <Font size="11.0" />
+                     </font>
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                  </Button>
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</VBox>
 
-</AnchorPane>

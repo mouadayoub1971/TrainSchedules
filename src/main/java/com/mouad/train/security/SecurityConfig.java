@@ -10,11 +10,11 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        // Disable CSRF protection for REST APIs (or enable it based on your needs)
         http
                 .csrf(csrf -> csrf.disable()) // Disable CSRF protection
-                .authorizeRequests()
-                .anyRequest().permitAll(); // Allow all requests
+                .authorizeHttpRequests(auth -> 
+                    auth.anyRequest().permitAll()
+                ); // Allow all requests
         return http.build();
     }
 }

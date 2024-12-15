@@ -3,7 +3,10 @@ package com.mouad.train.Schedules;
 import com.mouad.train.trains.Train;
 import com.mouad.train.trains.TrainRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -24,6 +27,18 @@ public class TrainSchedulesController {
     @GetMapping
     public List<TrainSchedules> getAllSchedules() {
         return trainSchedulesRepository.findAll();
+    }
+
+    // Get a single schedule by ID
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getScheduleById(@PathVariable Integer id) {
+        try {
+            TrainSchedules schedule = trainSchedulesRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Schedule not found with ID: " + id));
+            return ResponseEntity.ok(schedule);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
     // Get schedules by train (using Train object)
@@ -76,6 +91,17 @@ public class TrainSchedulesController {
         return trainSchedulesRepository.findByCost(cost);
     }
 
+    // Get total number of schedules
+    @GetMapping("/stats/count")
+    public ResponseEntity<Integer> getTotalSchedules() {
+        try {
+            int totalSchedules = trainSchedulesRepository.findAll().size();
+            return ResponseEntity.ok(totalSchedules);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(0);
+        }
+    }
+
     // Add a new schedule
     @PostMapping
     public TrainSchedules addSchedule(
@@ -93,5 +119,46 @@ public class TrainSchedulesController {
 
         // Save the schedule if no conflicts are found
         return trainSchedulesRepository.save(trainSchedule);
+    }
+
+    // Update a schedule
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateSchedule(@PathVariable Integer id, @RequestBody TrainSchedules trainSchedule) {
+        try {
+            // Check if schedule exists
+            TrainSchedules existingSchedule = trainSchedulesRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Schedule not found with ID: " + id));
+
+            // Check for conflicting schedules (excluding the current schedule)
+            List<TrainSchedules> conflictingSchedules = trainSchedulesRepository.findConflictingSchedules(
+                    trainSchedule.getTrain(),
+                    trainSchedule.getDepartureTime(),
+                    trainSchedule.getArrivalTime()
+            ).stream()
+            .filter(schedule -> !schedule.getId().equals(id))
+            .toList();
+
+            if (!conflictingSchedules.isEmpty()) {
+                throw new RuntimeException("Conflict detected with existing schedules for this train.");
+            }
+
+            // Update the schedule fields
+            existingSchedule.setTrain(trainSchedule.getTrain());
+            existingSchedule.setDeparture(trainSchedule.getDeparture());
+            existingSchedule.setDestination(trainSchedule.getDestination());
+            existingSchedule.setDepartureTime(trainSchedule.getDepartureTime());
+            existingSchedule.setArrivalTime(trainSchedule.getArrivalTime());
+            existingSchedule.setCost(trainSchedule.getCost());
+            existingSchedule.setAvailable(trainSchedule.isAvailable());
+
+            // Save the updated schedule
+            TrainSchedules updatedSchedule = trainSchedulesRepository.save(existingSchedule);
+            return ResponseEntity.ok(updatedSchedule);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to update schedule: " + e.getMessage());
+        }
     }
 }

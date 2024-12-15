@@ -254,6 +254,30 @@ public class BookingController {
         return ResponseEntity.noContent().build();
     }
 
+    // Get total number of bookings
+    @GetMapping("/stats/count")
+    public ResponseEntity<?> getTotalBookings() {
+        try {
+            int totalBookings = bookingRepository.findAll().size();
+            return ResponseEntity.ok(totalBookings);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(0);
+        }
+    }
+
+    // Get number of active bookings
+    @GetMapping("/stats/active")
+    public ResponseEntity<?> getActiveBookings() {
+        try {
+            long activeBookings = bookingRepository.findAll().stream()
+                    .filter(booking -> booking.getStatus() == Enums.BookingStatus.CONFIRMED)
+                    .count();
+            return ResponseEntity.ok((int) activeBookings);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(0);
+        }
+    }
+
     // Helper methods for validation
     private User validateUser(Integer userId) {
         return userRepository.findById(userId)
