@@ -1,0 +1,512 @@
+/* Common Styles */
+.menu-label {
+    -fx-text-fill: #808080;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+    -fx-padding: 5 10 5 10;
+    -fx-min-width: 130;
+    -fx-alignment: center-left;
+    -fx-border-width: 0 0 2 0;
+    -fx-border-color: transparent;
+    -fx-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.menu-label:hover {
+    -fx-border-color: #9c8057;
+    -fx-text-fill: white;
+}
+
+.menu-label.active {
+    -fx-border-color: #da9020;
+    -fx-text-fill: white;
+}
+
+.menu-icon {
+    -fx-opacity: 0.7;
+    -fx-transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.menu-icon:hover {
+    -fx-opacity: 1;
+    -fx-cursor: hand;
+}
+
+.menu-icon.active {
+    -fx-opacity: 1;
+}
+
+.menu-home {
+    -fx-text-fill: #808080;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.menu-home:hover {
+    -fx-text-fill: white;
+}
+
+.menu-home.active {
+    -fx-text-fill: white;
+}
+
+.menu-schedules {
+    -fx-text-fill: #808080;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.menu-schedules:hover {
+    -fx-text-fill: white;
+}
+
+.menu-schedules.active {
+    -fx-text-fill: white;
+}
+
+.menu-statistics {
+    -fx-text-fill: #808080;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.menu-statistics:hover {
+    -fx-text-fill: white;
+}
+
+.menu-statistics.active {
+    -fx-text-fill: white;
+}
+
+.menu-bookings {
+    -fx-text-fill: #808080;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.menu-bookings:hover {
+    -fx-text-fill: white;
+}
+
+.menu-bookings.active {
+    -fx-text-fill: white;
+}
+
+.title-label {
+    -fx-text-fill: #da9020;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+.stat-card {
+    -fx-background-color: #424344;
+    -fx-background-radius: 10;
+    -fx-padding: 20;
+}
+
+.stat-card:hover {
+    -fx-background-color: #4a4b4c;
+}
+
+.stat-label {
+    -fx-text-fill: #808080;
+    -fx-font-size: 14px;
+}
+
+.stat-number {
+    -fx-text-fill: white;
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+}
+
+/* Train Management Styles */
+.custom-table {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+}
+
+.custom-table .column-header {
+    -fx-background-color: #da9020;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.custom-table .table-row-cell {
+    -fx-background-color: #424344;
+    -fx-text-fill: white;
+}
+
+.custom-table .table-row-cell:odd {
+    -fx-background-color: #3a3b3c;
+}
+
+.custom-table .table-row-cell:selected {
+    -fx-background-color: #da9020;
+}
+
+/* Form Field Styles */
+.custom-text-field {
+    -fx-background-color: #424344;
+    -fx-text-fill: #ffffff;
+    -fx-prompt-text-fill: #a0a0a0;
+    -fx-border-color: #da9020;
+    -fx-border-width: 2;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-font-size: 14px;
+    -fx-padding: 8 12;
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+.custom-text-field:focused {
+    -fx-border-color: #ffc107;
+    -fx-effect: dropshadow(three-pass-box, rgba(218,144,32,0.3), 10, 0, 0, 0);
+}
+
+.custom-combo-box {
+    -fx-background-color: #424344;
+    -fx-text-fill: #ffffff;
+    -fx-prompt-text-fill: #a0a0a0;
+    -fx-border-color: #da9020;
+    -fx-border-width: 2;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-font-size: 14px;
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+.custom-combo-box:hover {
+    -fx-border-color: #ffc107;
+}
+
+.custom-combo-box:focused {
+    -fx-border-color: #ffc107;
+    -fx-effect: dropshadow(three-pass-box, rgba(218,144,32,0.3), 10, 0, 0, 0);
+}
+
+.custom-combo-box .list-cell {
+    -fx-background-color: #424344;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 8 12;
+    -fx-font-size: 14px;
+    -fx-font-family: "Segoe UI", sans-serif;
+}
+
+.custom-combo-box .list-cell:hover {
+    -fx-background-color: #da9020;
+}
+
+.custom-combo-box .list-view {
+    -fx-background-color: #424344;
+    -fx-background-radius: 5;
+    -fx-border-color: #da9020;
+    -fx-border-width: 2;
+    -fx-border-radius: 5;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 0);
+}
+
+.custom-combo-box .list-view .list-cell:filled:selected, 
+.custom-combo-box .list-view .list-cell:filled:selected:hover {
+    -fx-background-color: #da9020;
+    -fx-text-fill: white;
+}
+
+.custom-combo-box .list-view .list-cell:filled:hover {
+    -fx-background-color: #ffc107;
+    -fx-text-fill: #2e2f30;
+}
+
+.custom-combo-box .arrow-button {
+    -fx-background-color: transparent;
+}
+
+.custom-combo-box .arrow {
+    -fx-background-color: #da9020;
+}
+
+/* Form Labels */
+.form-label {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-font-family: "Segoe UI", sans-serif;
+    -fx-padding: 0 0 5 0;
+}
+
+/* Table Action Buttons */
+.table-action-button {
+    -fx-background-color: #424344;
+    -fx-text-fill: white;
+    -fx-font-size: 12px;
+    -fx-padding: 5 15;
+    -fx-background-radius: 3;
+    -fx-cursor: hand;
+    -fx-min-width: 70;
+}
+
+.table-action-button.edit {
+    -fx-background-color: #da9020;
+}
+
+.table-action-button.delete {
+    -fx-background-color: #424344;
+}
+
+.table-action-button:hover {
+    -fx-opacity: 0.9;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 3, 0, 0, 1);
+}
+
+.table-action-button:pressed {
+    -fx-opacity: 0.8;
+}
+
+/* Ensure action buttons container in table has proper spacing */
+.table-cell.actions-cell {
+    -fx-alignment: center;
+    -fx-spacing: 10;
+    -fx-padding: 5 10;
+}
+
+/* Table Styles */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-border-color: #424344;
+    -fx-border-radius: 5;
+    -fx-padding: 0;
+    -fx-border-width: 1;
+    -fx-min-height: 500;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #424344;
+    -fx-background-radius: 5 5 0 0;
+    -fx-padding: 5 0 5 0;
+}
+
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: transparent;
+    -fx-size: 45;
+    -fx-border-width: 0 0 0 0;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-alignment: CENTER;
+    -fx-padding: 10 5;
+}
+
+.table-view .table-cell {
+    -fx-text-fill: white;
+    -fx-alignment: CENTER;
+    -fx-font-size: 13px;
+    -fx-padding: 10 15 10 15;
+}
+
+/* Keep the actions cell left-aligned */
+.table-cell.actions-cell {
+    -fx-alignment: center;
+}
+
+.table-row-cell {
+    -fx-background-color: #3a3b3c;
+    -fx-border-color: transparent;
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #323334;
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #4a4b4c;
+    -fx-cursor: hand;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #da9020;
+}
+
+.table-view .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.table-view .scroll-bar:vertical .thumb {
+    -fx-background-color: #424344;
+    -fx-background-radius: 5;
+}
+
+.table-view .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+}
+
+.table-view .scroll-bar:vertical .increment-button,
+.table-view .scroll-bar:vertical .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 5;
+}
+
+/* Make sure table takes full space */
+.table-view .virtual-flow .scroll-bar:vertical,
+.table-view .virtual-flow .scroll-bar:vertical .track,
+.table-view .virtual-flow .scroll-bar:vertical .track-background,
+.table-view .virtual-flow .scroll-bar:horizontal,
+.table-view .virtual-flow .scroll-bar:horizontal .track,
+.table-view .virtual-flow .scroll-bar:horizontal .track-background {
+    -fx-background-color: transparent;
+}
+
+/* Button Styles */
+.gold-button {
+    -fx-background-color: #da9020;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.gold-button:hover {
+    -fx-background-color: #ffc107;
+}
+
+.save-button {
+    -fx-background-color: #da9020;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+    -fx-min-width: 80;
+    -fx-padding: 8 15;
+}
+
+.save-button:hover {
+    -fx-background-color: #ffc107;
+}
+
+.cancel-button {
+    -fx-background-color: #da9020;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+    -fx-min-width: 80;
+    -fx-padding: 8 15;
+}
+
+.cancel-button:hover {
+    -fx-background-color: #ffc107;
+}
+
+.action-button, .table-action-button {
+    -fx-background-color: #da9020;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-min-height: 35px;
+    -fx-pref-height: 35px;
+    -fx-padding: 0 15px;
+    -fx-alignment: center;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+.action-button:hover, .table-action-button:hover {
+    -fx-background-color: #e69b30;
+}
+
+.action-button:pressed, .table-action-button:pressed {
+    -fx-background-color: #c88010;
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+.delete-button {
+    -fx-background-color: #424344;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-min-height: 35px;
+    -fx-pref-height: 35px;
+    -fx-padding: 0 15px;
+    -fx-alignment: center;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.delete-button:hover {
+    -fx-background-color: #525354;
+}
+
+.delete-button:pressed {
+    -fx-background-color: #323334;
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+.edit-button {
+    -fx-background-color: #da9020;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-min-height: 35px;
+    -fx-pref-height: 35px;
+    -fx-padding: 0 15px;
+    -fx-alignment: center;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+.edit-button:hover {
+    -fx-background-color: #e69b30;
+}
+
+.edit-button:pressed {
+    -fx-background-color: #c88010;
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+.add-button {
+    -fx-background-color: #da9020;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-min-height: 35px;
+    -fx-pref-height: 35px;
+    -fx-padding: 0 15px;
+    -fx-alignment: center;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+.add-button:hover {
+    -fx-background-color: #e69b30;
+}
+
+.add-button:pressed {
+    -fx-background-color: #c88010;
+    -fx-scale-x: 0.98;
+    -fx-scale-y: 0.98;
+}
+
+/* Form Button Container */
+.button-container {
+    -fx-spacing: 15;
+    -fx-padding: 20 0 0 0;
+    -fx-alignment: center-right;
+}
+
+.button:hover {
+    -fx-opacity: 0.8;
+}

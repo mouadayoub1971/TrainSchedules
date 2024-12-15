@@ -12,7 +12,8 @@ import javafx.stage.Stage;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
+import com.mouad.frontend.Services.AdminService;
+import com.mouad.frontend.Controllers.Client.ClientController;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -32,100 +33,81 @@ public class LoginController {
     @FXML
     private FontAwesomeIconView closeIcon;
 
-    private final String API_URL = "http://localhost:8080/login";
-    private final HttpClient httpClient;
-    private final ObjectMapper objectMapper;
+    private final AdminService adminService;
 
     public LoginController() {
-        this.httpClient = HttpClient.newHttpClient();
-        this.objectMapper = new ObjectMapper();
+        this.adminService = AdminService.getInstance();
     }
 
     @FXML
-    public void onLoginClick(ActionEvent actionEvent) {
+    void onLoginClick(ActionEvent event) {
+        String email = emailField.getText();
+        String password = passwordField.getText();
+
+        if (email.isEmpty() || password.isEmpty()) {
+            errorLabel.setText("Please enter both email and password");
+            return;
+        }
+
         try {
-            String email = emailField.getText().trim();
-            String password = passwordField.getText();
+            AdminService adminService = AdminService.getInstance();
+            AdminService.LoginResponse loginResponse = adminService.login(email, password);
+            System.out.println("Login response: " + loginResponse.getMessage() + 
+                             ", admin=" + loginResponse.isAdmin() + 
+                             ", firstName=" + loginResponse.getFirstName());
 
-            // Validate input
-            if (email.isEmpty()) {
-                errorLabel.setText("Please enter your email");
-                return;
-            }
-            if (password.isEmpty()) {
-                errorLabel.setText("Please enter your password");
-                return;
-            }
-
-            // Create request body
-            ObjectNode requestBody = objectMapper.createObjectNode();
-            requestBody.put("email", email);
-            requestBody.put("password", password);
-
-            // Create request
-            HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(API_URL))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(objectMapper.writeValueAsString(requestBody)))
-                .build();
-
-            // Send request
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
-
-            if (response.statusCode() >= 200 && response.statusCode() < 300) {
-                // Clear error message
-                errorLabel.setText("");
-                
-                // Debug: Print response body
-                System.out.println("Response body: " + response.body());
-                
-                try {
-                    // Parse the response to get the admin status
-                    ObjectNode responseBody = objectMapper.readValue(response.body(), ObjectNode.class);
-                    System.out.println("Parsed response: " + responseBody.toString());
+            if (loginResponse != null) {
+                if (loginResponse.getMessage().equals("Login successful")) {
+                    System.out.println("Login successful, loading dashboard...");
                     
-                    boolean isAdmin = responseBody.get("admin").asBoolean();
-                    String message = responseBody.get("message").asText();
-                    System.out.println("Is admin: " + isAdmin);
-                    System.out.println("Message: " + message);
+                    // Clear error message
+                    errorLabel.setText("");
                     
                     // Get the stage from any control (e.g., emailField)
                     Stage stage = (Stage) emailField.getScene().getWindow();
 
-                    // Load the appropriate scene based on admin status
-                    String fxmlPath = isAdmin ? 
-                        "/Fxml/Admin/Admin.fxml" : 
-                        "/Fxml/Client/Client.fxml";
-                    
-                    System.out.println("Loading FXML: " + fxmlPath);
-                    
-                    FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-                    Parent root = loader.load();
-                    Scene scene = new Scene(root);
-                    
-                    // Set window title based on user type
-                    stage.setTitle(isAdmin ? "Admin Dashboard" : "Client Dashboard");
-                    stage.setScene(scene);
+                    if (loginResponse.isAdmin()) {
+                        // Load the admin dashboard
+                        String fxmlPath = "/Fxml/Admin/MainPage.fxml";
+                        System.out.println("Loading admin FXML: " + fxmlPath);
+                        
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+                        Parent root = loader.load();
+                        Scene scene = new Scene(root);
+                        
+                        stage.setTitle("Admin Dashboard - " + loginResponse.getFirstName());
+                        stage.setScene(scene);
+                    } else {
+                        // Load the client dashboard
+                        String fxmlPath = "/Fxml/Client/Client.fxml";
+                        System.out.println("Loading client FXML: " + fxmlPath);
+                        
+                        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+                        Parent root = loader.load();
+                        
+                        // Get the client controller and set the user info
+                        ClientController clientController = loader.getController();
+                        String displayName = loginResponse.getFirstName() != null ? 
+                                          loginResponse.getFirstName() : 
+                                          loginResponse.getEmail().split("@")[0];
+                        clientController.setUserInfo(displayName, loginResponse.getEmail());
+                        
+                        Scene scene = new Scene(root);
+                        stage.setTitle("Client Dashboard - " + displayName);
+                        stage.setScene(scene);
+                    }
                     stage.show();
-                } catch (Exception e) {
-                    System.err.println("Error parsing response or loading FXML: " + e.getMessage());
-                    e.printStackTrace();
-                    errorLabel.setText("Error loading dashboard: " + e.getMessage());
+                } else {
+                    // Show error message from server
+                    errorLabel.setText(loginResponse.getMessage());
+                    System.err.println("Login failed: " + loginResponse.getMessage());
                 }
             } else {
-                // Handle error response
-                String errorMessage;
-                try {
-                    ObjectNode errorBody = objectMapper.readValue(response.body(), ObjectNode.class);
-                    errorMessage = errorBody.get("message").asText();
-                } catch (Exception e) {
-                    errorMessage = response.body();
-                }
-                errorLabel.setText(errorMessage);
-                System.err.println("Login error: " + errorMessage);
+                errorLabel.setText("Error connecting to server");
+                System.err.println("No response from server");
             }
         } catch (Exception e) {
-            errorLabel.setText("Error connecting to server: " + e.getMessage());
+            errorLabel.setText("Error: " + e.getMessage());
             System.err.println("Login error: " + e.getMessage());
             e.printStackTrace();
         }

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox spacing="20" styleClass="form-container" stylesheets="@../../styles/SchedulesPage.css" 
+      xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" 
+      fx:controller="com.mouad.frontend.Controllers.Admin.ScheduleDialogController"
+      minWidth="600" minHeight="500">
+    
+    <padding>
+        <Insets top="30" right="30" bottom="30" left="30"/>
+    </padding>
+    
+    <Label text="Schedule Details" styleClass="form-title" textFill="#da9020">
+        <font>
+            <Font name="System Bold" size="24.0"/>
+        </font>
+    </Label>
+    
+    <GridPane hgap="15" vgap="20">
+        <columnConstraints>
+            <ColumnConstraints hgrow="NEVER" minWidth="120"/>
+            <ColumnConstraints hgrow="ALWAYS" minWidth="300"/>
+        </columnConstraints>
+        
+        <!-- Train Selection -->
+        <Label text="Train:" GridPane.rowIndex="0" GridPane.columnIndex="0" 
+               styleClass="form-label" textFill="WHITE">
+            <font>
+                <Font name="System Bold" size="14.0"/>
+            </font>
+        </Label>
+        <ComboBox fx:id="trainComboBox" GridPane.rowIndex="0" GridPane.columnIndex="1" 
+                  promptText="Select Train" styleClass="form-field" maxWidth="Infinity"/>
+        
+        <!-- Departure -->
+        <Label text="Departure:" GridPane.rowIndex="1" GridPane.columnIndex="0" 
+               styleClass="form-label" textFill="WHITE">
+            <font>
+                <Font name="System Bold" size="14.0"/>
+            </font>
+        </Label>
+        <TextField fx:id="departureField" GridPane.rowIndex="1" GridPane.columnIndex="1" 
+                   promptText="Enter departure location" styleClass="form-field"/>
+        
+        <!-- Destination -->
+        <Label text="Destination:" GridPane.rowIndex="2" GridPane.columnIndex="0" 
+               styleClass="form-label" textFill="WHITE">
+            <font>
+                <Font name="System Bold" size="14.0"/>
+            </font>
+        </Label>
+        <TextField fx:id="destinationField" GridPane.rowIndex="2" GridPane.columnIndex="1" 
+                   promptText="Enter destination location" styleClass="form-field"/>
+        
+        <!-- Departure Time -->
+        <Label text="Departure Time:" GridPane.rowIndex="3" GridPane.columnIndex="0" 
+               styleClass="form-label" textFill="WHITE">
+            <font>
+                <Font name="System Bold" size="14.0"/>
+            </font>
+        </Label>
+        <HBox spacing="15" GridPane.rowIndex="3" GridPane.columnIndex="1">
+            <DatePicker fx:id="departureDatePicker" styleClass="custom-date-picker" promptText="Select date" HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="departureTimeField" styleClass="form-field" promptText="HH:mm" prefWidth="120"/>
+        </HBox>
+        
+        <!-- Arrival Time -->
+        <Label text="Arrival Time:" GridPane.rowIndex="4" GridPane.columnIndex="0" 
+               styleClass="form-label" textFill="WHITE">
+            <font>
+                <Font name="System Bold" size="14.0"/>
+            </font>
+        </Label>
+        <HBox spacing="15" GridPane.rowIndex="4" GridPane.columnIndex="1">
+            <DatePicker fx:id="arrivalDatePicker" styleClass="custom-date-picker" promptText="Select date" HBox.hgrow="ALWAYS"/>
+            <TextField fx:id="arrivalTimeField" styleClass="form-field" promptText="HH:mm" prefWidth="120"/>
+        </HBox>
+        
+        <!-- Cost -->
+        <Label text="Cost:" GridPane.rowIndex="5" GridPane.columnIndex="0" 
+               styleClass="form-label" textFill="WHITE">
+            <font>
+                <Font name="System Bold" size="14.0"/>
+            </font>
+        </Label>
+        <TextField fx:id="costField" GridPane.rowIndex="5" GridPane.columnIndex="1" 
+                   promptText="Enter cost" styleClass="form-field"/>
+        
+        <!-- Available -->
+        <Label text="Available:" GridPane.rowIndex="6" GridPane.columnIndex="0" 
+               styleClass="form-label" textFill="WHITE">
+            <font>
+                <Font name="System Bold" size="14.0"/>
+            </font>
+        </Label>
+        <CheckBox fx:id="availableCheckBox" GridPane.rowIndex="6" GridPane.columnIndex="1" 
+                  selected="true" style="-fx-text-fill: white;"/>
+    </GridPane>
+    
+    <!-- Buttons -->
+    <HBox spacing="15" alignment="CENTER_RIGHT">
+        <Button fx:id="cancelButton" text="Cancel" styleClass="action-button, cancel-button" minWidth="100"/>
+        <Button fx:id="saveButton" text="Save" styleClass="action-button" minWidth="100"/>
+    </HBox>
+    
+</VBox>

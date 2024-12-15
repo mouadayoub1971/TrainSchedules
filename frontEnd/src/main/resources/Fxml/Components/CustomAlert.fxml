@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Font?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml/1" 
+      styleClass="custom-alert" spacing="20" alignment="CENTER">
+    <padding>
+        <Insets top="20" right="25" bottom="20" left="25"/>
+    </padding>
+    <children>
+        <!-- Alert Icon (if needed) -->
+        <Label fx:id="titleLabel" styleClass="alert-title">
+            <font>
+                <Font name="System Bold" size="18.0"/>
+            </font>
+        </Label>
+        <Label fx:id="messageLabel" styleClass="alert-message" wrapText="true">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Label>
+        <HBox spacing="10" alignment="CENTER">
+            <children>
+                <Button fx:id="confirmButton" styleClass="alert-confirm-button" text="OK" defaultButton="true"/>
+                <Button fx:id="cancelButton" styleClass="alert-cancel-button" text="Cancel" cancelButton="true"/>
+            </children>
+        </HBox>
+    </children>
+</VBox>
