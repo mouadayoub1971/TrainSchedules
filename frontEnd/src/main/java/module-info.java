@@ -10,10 +10,15 @@ module com.mouad.frontend {
     requires com.fasterxml.jackson.databind;
     requires org.apache.httpcomponents.core5.httpcore5;
     requires com.fasterxml.jackson.datatype.jsr310;
+    requires java.net.http;
+    requires com.fasterxml.jackson.core;
+    requires com.fasterxml.jackson.annotation;
 
     opens com.mouad.frontend to javafx.fxml;
     opens com.mouad.frontend.Controllers.Admin to javafx.fxml;
-    opens com.mouad.frontend.Controllers.Client to javafx.fxml;
+    opens com.mouad.frontend.Controllers.Client to javafx.fxml; 
+    opens com.mouad.frontend.Controllers to javafx.fxml;
+
     exports com.mouad.frontend;
     exports com.mouad.frontend.Controllers;
     exports com.mouad.frontend.Controllers.Admin;
