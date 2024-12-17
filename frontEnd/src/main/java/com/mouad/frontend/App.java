@@ -2,6 +2,7 @@ package com.mouad.frontend;
 
 import com.mouad.frontend.Controllers.Admin.AdminLogsViewer;
 import com.mouad.frontend.Models.Model;
+import com.mouad.frontend.Views.ViewsFactory;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,7 +24,8 @@ public class App extends Application {
 //            AdminLogsViewer controller = loader.getController();
 //            controller.shutdown();
 //        });
-        Model.getInstance().getViewsFactory().Reservation();
+//        Model.getInstance().getViewsFactory().Reservation();
+        ViewsFactory.showLoginPage();
     }
 
 

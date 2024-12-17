@@ -9,6 +9,7 @@ import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import java.time.Duration;
+import java.util.List;
 import java.util.Properties;
 import java.util.HashMap;
 import java.util.Map;
@@ -120,7 +121,7 @@ public class BookingDashboardControllerv1 {
 //        props.put("bootstrap.servers", "localhost:9092");
 //        props.put("group.id", "firstGroup");
 //        props.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-//        props.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+//        props.put("value.deserializer", "org.apache.kafk  a.common.serialization.StringDeserializer");
 //
 //
 //        // Set to read from the earliest available message
@@ -177,6 +178,41 @@ public class BookingDashboardControllerv1 {
         consumer.subscribe(java.util.Collections.singletonList("spark-out-put"));
     }
 
+//    private void startKafkaConsumption() {
+//        Thread kafkaThread = new Thread(() -> {
+//            try {
+//                while (!Thread.currentThread().isInterrupted()) {
+//                    ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
+//
+//                    if (!records.isEmpty()) {
+//                        // Clear existing data before processing new records
+//                        userBookingCounts.clear();
+//                        routeCounts.clear();
+//                        durationCounts.clear();
+//                        destinationCounts.clear();
+//                        departureCounts.clear();
+//
+//                        // Process records
+//                        for (ConsumerRecord<String, String> record : records) {
+//                            processRecord(record.value());
+//                        }
+//
+//                        // Update UI on JavaFX Application Thread
+//                        Platform.runLater(this::updateTables);
+//                    }
+//                }
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            } finally {
+//                if (consumer != null) {
+//                    consumer.close();
+//                }
+//            }
+//        });
+//        kafkaThread.setDaemon(true);
+//        kafkaThread.start();
+//    }
+
     private void startKafkaConsumption() {
         Thread kafkaThread = new Thread(() -> {
             try {
@@ -184,14 +220,7 @@ public class BookingDashboardControllerv1 {
                     ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100));
 
                     if (!records.isEmpty()) {
-                        // Clear existing data before processing new records
-                        userBookingCounts.clear();
-                        routeCounts.clear();
-                        durationCounts.clear();
-                        destinationCounts.clear();
-                        departureCounts.clear();
-
-                        // Process records
+                        // Process records without clearing existing data
                         for (ConsumerRecord<String, String> record : records) {
                             processRecord(record.value());
                         }
@@ -213,22 +242,90 @@ public class BookingDashboardControllerv1 {
     }
 
     // Process individual Kafka message
+//    private void processRecord(String message) {
+//        try {
+//            JSONObject jsonMessage = new JSONObject(message);
+//
+//            // Extract logger name and message
+//            String loggerName = jsonMessage.getString("loggerName");
+//            String messageContent = jsonMessage.getString("message");
+//            List<String> contextData = jsonMessage.getJSONArray("allContextData")
+//                    .toList()
+//                    .stream()
+//                    .map(Object::toString)
+//                    .collect(Collectors.toList());
+//
+//            // Ignore messages with "User Info" or "Schedule Info" context
+//            if (loggerName.equals("BookingController") &&
+//                    (contextData.contains("User Info") || contextData.contains("Schedule Info"))) {
+//                return;  // Skip processing these messages
+//            }
+//
+//            // Existing processing logic for other messages
+//            if (loggerName.equals("BookingController")) {
+//                MessageKey key;
+//                if (messageContent.contains("user email")) {
+//                    String userEmail = extractUserEmail(messageContent);
+//                    key = new MessageKey(loggerName, userEmail);
+//                    userBookingCounts.put(key, jsonMessage.getInt("logCount"));
+//                }
+//
+//                if (messageContent.contains("trip:")) {
+//                    String route = extractRoute(messageContent);
+//                    key = new MessageKey(loggerName, route);
+//                    routeCounts.put(key, jsonMessage.getInt("logCount"));
+//                }
+//
+//                if (messageContent.contains("timing:")) {
+//                    String duration = extractDuration(messageContent);
+//                    key = new MessageKey(loggerName, duration);
+//                    durationCounts.put(key, jsonMessage.getInt("logCount"));
+//                }
+//
+//                if (messageContent.contains("arrive:")) {
+//                    String destination = extractDestination(messageContent, "arrive:");
+//                    key = new MessageKey(loggerName, destination);
+//                    destinationCounts.put(key, jsonMessage.getInt("logCount"));
+//                }
+//
+//                if (messageContent.contains("depart:")) {
+//                    String departure = extractDestination(messageContent, "depart:");
+//                    key = new MessageKey(loggerName, departure);
+//                    departureCounts.put(key, jsonMessage.getInt("logCount"));
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
     private void processRecord(String message) {
         try {
             JSONObject jsonMessage = new JSONObject(message);
 
-            // Extract logCount
-            int logCount = jsonMessage.getInt("logCount");
-
             // Extract logger name and message
             String loggerName = jsonMessage.getString("loggerName");
             String messageContent = jsonMessage.getString("message");
+            List<String> contextData = jsonMessage.getJSONArray("allContextData")
+                    .toList()
+                    .stream()
+                    .map(Object::toString)
+                    .collect(Collectors.toList());
 
+            // Ignore messages with "User Info" or "Schedule Info" context
+            if (loggerName.equals("BookingController") &&
+                    (contextData.contains("User Info") || contextData.contains("Schedule Info"))) {
+                return;  // Skip processing these messages
+            }
+
+            // Existing processing logic for other messages
             if (loggerName.equals("BookingController")) {
                 MessageKey key;
+                int logCount = jsonMessage.getInt("logCount");
+
                 if (messageContent.contains("user email")) {
                     String userEmail = extractUserEmail(messageContent);
                     key = new MessageKey(loggerName, userEmail);
+                    // Update count if key exists, otherwise put new entry
                     userBookingCounts.put(key, logCount);
                 }
 

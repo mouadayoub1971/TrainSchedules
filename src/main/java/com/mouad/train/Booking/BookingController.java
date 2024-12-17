@@ -73,6 +73,7 @@ public class BookingController {
     // Create booking
     @PostMapping
     public ResponseEntity<?> createBooking(@RequestBody Booking bookingRequest) {
+        String Messsage;
         try {
             // Validate User and Schedule
             User user = validateUser(bookingRequest.getUser().getId());
@@ -88,6 +89,7 @@ public class BookingController {
             bookingRequest.setStatus(Enums.BookingStatus.CONFIRMED);
 
             Booking savedBooking = bookingRepository.save(bookingRequest);
+
 
             // Log schedule path and booked seats
             String scheduleLog = String.format(
@@ -108,6 +110,21 @@ public class BookingController {
                     savedBooking.getId()
             );
             kafkaProducer.sendMessage(logsGene.generateLog("INFO", "BookingController", userLog, "User Info"));
+
+            Messsage = logsGene.generateLog("INFO", "BookingController", "user email" + user.getEmail(), "details: "+ schedule.getDeparture() + " -> " + schedule.getDestination() + "  ;" );
+            kafkaProducer.sendMessage(Messsage);
+            Messsage = logsGene.generateLog("INFO", "BookingController", "trip:" + schedule.getDeparture() + "->" + schedule.getDestination(), "details: " + schedule.getTrain().getTrainName());
+            kafkaProducer.sendMessage(Messsage);
+            Messsage = logsGene.generateLog("INFO", "BookingController", String.format(
+                    "timing:%s -> %s ",
+                    schedule.getDepartureTime().toString(),
+                    schedule.getArrivalTime().toString()
+            ), "details: " + schedule.getTrain().getTrainName());
+            kafkaProducer.sendMessage(Messsage);
+            Messsage = logsGene.generateLog("INFO", "BookingController", "depart:" + schedule.getDeparture() , "details: " + schedule.getTrain().getTrainName());
+            kafkaProducer.sendMessage(Messsage);
+            Messsage = logsGene.generateLog("INFO", "BookingController", "arrive:" + schedule.getDestination() , "details: " + schedule.getTrain().getTrainName());
+            kafkaProducer.sendMessage(Messsage);
 
             // Return the created booking
             return ResponseEntity.status(HttpStatus.CREATED).body(savedBooking);
@@ -133,7 +150,7 @@ public class BookingController {
             existingBooking.setSchedule(schedule);
             existingBooking.setNumberOfSeats(bookingRequest.getNumberOfSeats());
             existingBooking.setBookingTime(LocalDateTime.now());
-            existingBooking.setStatus(Enums.BookingStatus.CONFIRMED);
+            existingBooking.setStatus(bookingRequest.getStatus());
 
             Booking updatedBooking = bookingRepository.save(existingBooking);
 

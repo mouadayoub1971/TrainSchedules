@@ -36,6 +36,9 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class BookingsController {
+    public Label totalBookingsLabel;
+    public Label activeBookingsLabel;
+    public Label todayBookingsLabel;
     @FXML private ImageView homeIcon;
     @FXML private ImageView trainsIcon;
     @FXML private ImageView schedulesIcon;
@@ -76,6 +79,11 @@ public class BookingsController {
     @FXML
     private void initialize() {
         try {
+
+
+            totalBookingsLabel.setText("" + bookingService.getTotalBookings());
+            activeBookingsLabel.setText(""+bookingService.getActiveBookings());
+            todayBookingsLabel.setText("" + bookingService.getTodayBookings());
             // Initialize status filter
             statusFilter.getItems().addAll(STATUS_ALL, STATUS_CONFIRMED, STATUS_PENDING, STATUS_CANCELLED);
             statusFilter.setValue(STATUS_ALL);

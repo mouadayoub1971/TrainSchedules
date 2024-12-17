@@ -16,6 +16,7 @@ import javafx.scene.control.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class Reservation {
@@ -45,8 +46,16 @@ public class Reservation {
 
     @FXML
     private Label userNameLabel;
+    private String firstName;
+    private String email;
 
     private ObservableList<Booking> bookingsList = FXCollections.observableArrayList();
+    public void setUserInfo(String firstName, String email) {
+        System.out.println("Setting user info - firstName: " + firstName + ", email: " + email );
+        this.firstName = firstName;
+        this.email = email;
+
+    }
 
     @FXML
     public void initialize() {
@@ -81,20 +90,36 @@ public class Reservation {
 
     private void fetchUserBookings() {
         try {
-            // Fetch ALL bookings
-            String jsonResponse = BackendService.fetchData("/bookings");
-
-            // Parse JSON response
+            // Fetch ALL users
+            String usersJsonResponse = BackendService.fetchData("/users");
             ObjectMapper objectMapper = new ObjectMapper();
+
+            // Parse JSON directly as List of Maps
+            List<Map<String, Object>> users = objectMapper.readValue(usersJsonResponse, new TypeReference<List<Map<String, Object>>>(){});
+
+            // Extract ID where email matches firstName
+            Integer matchedUserId = users.stream()
+                    .filter(user ->
+                            user.get("email") != null &&
+                                    user.get("email").equals(firstName)
+                    )
+                    .map(user -> (Integer) user.get("id"))
+                    .findFirst()
+                    .orElseThrow(() -> new RuntimeException("No user found with email: " + firstName));
+
+            // Fetch ALL bookings
+            String bookingsJsonResponse = BackendService.fetchData("/bookings");
+
+            // Configure ObjectMapper
             objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             objectMapper.registerModule(new JavaTimeModule());
 
             // Read all bookings
-            List<Booking> allBookings = objectMapper.readValue(jsonResponse, new TypeReference<List<Booking>>() {});
+            List<Booking> allBookings = objectMapper.readValue(bookingsJsonResponse, new TypeReference<List<Booking>>() {});
 
-            // Filter bookings for user ID 1
+            // Filter bookings for matched user ID
             List<Booking> userBookings = allBookings.stream()
-                    .filter(booking -> booking.getUser().getId() == 1L)
+                    .filter(booking -> booking.getUser().getId().equals(matchedUserId))
                     .collect(Collectors.toList());
 
             // Update UI on JavaFX Application Thread
@@ -106,8 +131,12 @@ public class Reservation {
                 if (!userBookings.isEmpty()) {
                     userNameLabel.setText(userBookings.get(0).getUser().getFirstName() + " " +
                             userBookings.get(0).getUser().getSecondName());
+                } else {
+                    // Handle case where no bookings are found
+                    userNameLabel.setText("No bookings found");
                 }
             });
+
         } catch (Exception e) {
             e.printStackTrace();
 

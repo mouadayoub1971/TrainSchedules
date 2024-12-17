@@ -94,7 +94,7 @@ public class ScheduleDialogController {
     private void setupValidation() {
         departureTimeField.setTextFormatter(new TextFormatter<>(change -> {
             String newText = change.getControlNewText();
-            if (newText.matches("([01]?[0-9]|2[0-3]):[0-5][0-9]") || newText.isEmpty()) {
+            if (newText.matches("^(0?[0-9]|1[0-9]|2[0-3])?:?(0?[0-9]|[0-5][0-9])?$") || newText.isEmpty()) {
                 return change;
             }
             return null;
@@ -102,7 +102,7 @@ public class ScheduleDialogController {
 
         arrivalTimeField.setTextFormatter(new TextFormatter<>(change -> {
             String newText = change.getControlNewText();
-            if (newText.matches("([01]?[0-9]|2[0-3]):[0-5][0-9]") || newText.isEmpty()) {
+            if (newText.matches("^(0?[0-9]|1[0-9]|2[0-3])?:?(0?[0-9]|[0-5][0-9])?$") || newText.isEmpty()) {
                 return change;
             }
             return null;

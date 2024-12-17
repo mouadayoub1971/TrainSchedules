@@ -27,5 +27,7 @@ module com.mouad.frontend {
     exports com.mouad.frontend.Controllers;
     exports com.mouad.frontend.Controllers.Admin;
     exports com.mouad.frontend.Models;
+    exports com.mouad.frontend.Views;
+    exports com.mouad.frontend.Controllers.Client;
     exports com.mouad.frontend.Services;
 }

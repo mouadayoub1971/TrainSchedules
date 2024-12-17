@@ -77,7 +77,8 @@ public class BookingEditDialogController {
     public void setBooking(JsonNode booking) {
         try {
             System.out.println("Received booking data: " + booking.toString());
-            
+            System.out.println("status: ");
+
             this.currentBooking = booking;
             
             // Set user email (read-only)
@@ -162,6 +163,7 @@ public class BookingEditDialogController {
             // Set schedule ID only
             ObjectNode scheduleNode = booking.putObject("schedule");
             scheduleNode.put("id", scheduleComboBox.getValue().get("id").asInt());
+            booking.put("status", statusComboBox.getValue());
 
             System.out.println("Sending update request with data: " + booking.toString());
 

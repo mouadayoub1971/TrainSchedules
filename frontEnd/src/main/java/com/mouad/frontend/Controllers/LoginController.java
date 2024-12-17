@@ -39,6 +39,7 @@ public class LoginController {
         this.adminService = AdminService.getInstance();
     }
 
+
     @FXML
     void onLoginClick(ActionEvent event) {
         String email = emailField.getText();
@@ -87,13 +88,11 @@ public class LoginController {
                         
                         // Get the client controller and set the user info
                         ClientController clientController = loader.getController();
-                        String displayName = loginResponse.getFirstName() != null ? 
-                                          loginResponse.getFirstName() : 
-                                          loginResponse.getEmail().split("@")[0];
+                        String displayName = loginResponse.getEmail();
                         clientController.setUserInfo(displayName, loginResponse.getEmail());
                         
                         Scene scene = new Scene(root);
-                        stage.setTitle("Client Dashboard - " + displayName);
+                        stage.setTitle("Client Dashboard - " + loginResponse.getEmail());
                         stage.setScene(scene);
                     }
                     stage.show();

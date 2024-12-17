@@ -3,6 +3,9 @@ package com.mouad.frontend.Services;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.mouad.frontend.Utils.ApiClient;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public class BookingService {
     private static volatile BookingService instance;
     private final ApiClient apiClient;
@@ -68,6 +71,25 @@ public class BookingService {
         for (JsonNode booking : bookings) {
             if (booking.has("status") && "CONFIRMED".equals(booking.get("status").asText())) {
                 count++;
+            }
+        }
+        return count;
+    }
+
+    public int getTodayBookings() throws Exception {
+        JsonNode bookings = getAllBookings();
+        int count = 0;
+        LocalDate today = LocalDate.now(); // Get today's date
+
+        for (JsonNode booking : bookings) {
+            if (booking.has("bookingTime")) {
+                // Parse the full timestamp and extract just the date
+                LocalDateTime bookingDateTime = LocalDateTime.parse(booking.get("bookingTime").asText());
+                LocalDate bookingDate = bookingDateTime.toLocalDate();
+
+                if (bookingDate.equals(today)) {
+                    count++;
+                }
             }
         }
         return count;

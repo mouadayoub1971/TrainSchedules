@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox minHeight="750.0" minWidth="1250.0" style="-fx-background-color: #2e2f30; -fx-opacity: 1.0;" stylesheets="@../../styles/MainPage.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mouad.frontend.Controllers.Client.ViewReservation">
+    <children>
+        <HBox alignment="CENTER_LEFT" spacing="10" VBox.vgrow="ALWAYS">
+            <children>
+                <StackPane>
+                    <children>
+                        <HBox>
+                            <children>
+                                <VBox alignment="CENTER" prefHeight="600.0" prefWidth="50.0" spacing="32" style="-fx-background-color: linear-gradient(to right, #da9020 80%, #242526 95%);">
+                                    <children>
+                                        <ImageView fx:id="homeIcon" onMouseClicked="#onHomeClicked" styleClass="menu-icon active" fitHeight="26.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@../../images/homepage.png" />
+                                            </image>
+                                            <VBox.margin>
+                                                <Insets left="20" />
+                                            </VBox.margin>
+                                        </ImageView>
+                                        <ImageView fx:id="bookingsIcon" onMouseClicked="#onViewBookings" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@../../images/calendar_1.png" />
+                                            </image>
+                                            <VBox.margin>
+                                                <Insets left="20" />
+                                            </VBox.margin>
+                                        </ImageView>
+                                        <ImageView fx:id="logoutIcon" onMouseClicked="#onLogout" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                            <image>
+                                                <Image url="@../../images/logout.png" />
+                                            </image>
+                                            <VBox.margin>
+                                                <Insets left="20" />
+                                            </VBox.margin>
+                                        </ImageView>
+                                    </children>
+                                </VBox>
+                                <VBox alignment="CENTER" prefWidth="130" spacing="25" style="-fx-background-color: #242526;">
+                                    <children>
+                                        <Label fx:id="homeLabel" onMouseClicked="#onHomeClicked" styleClass="menu-label, menu-home, active" text="Home">
+                                            <font>
+                                                <Font name="System Bold" size="14.0" />
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="bookingsLabel" onMouseClicked="#onViewBookings" styleClass="menu-label, menu-bookings" text="My Bookings">
+                                            <font>
+                                                <Font name="System Bold" size="14.0" />
+                                            </font>
+                                        </Label>
+                                        <Label fx:id="logoutLabel" onMouseClicked="#onLogout" styleClass="menu-label, menu-logout" text="Logout">
+                                            <font>
+                                                <Font name="System Bold" size="14.0" />
+                                            </font>
+                                        </Label>
+                                    </children>
+                                    <padding>
+                                        <Insets top="20" />
+                                    </padding>
+                                </VBox>
+                            </children>
+                        </HBox>
+                    </children>
+                </StackPane>
+                <VBox spacing="15" HBox.hgrow="ALWAYS">
+                    <children>
+                        <VBox alignment="CENTER_LEFT" style="-fx-background-color: #424344; -fx-background-radius: 10;" minHeight="60">
+                            <padding>
+                                <Insets left="20" />
+                            </padding>
+                            <children>
+                                <Label fx:id="welcomeLabel" style="-fx-text-fill: white; -fx-font-size: 24px;" text="Welcome to Client Dashboard" />
+                            </children>
+                        </VBox>
+                        <VBox fx:id="contentArea" style="-fx-background-color: #424344; -fx-background-radius: 10;" VBox.vgrow="ALWAYS">
+                            <!-- Content will be loaded here dynamically -->
+                            <TableView fx:id="bookingsTableView" prefHeight="500.0" prefWidth="1200.0"
+                                       style="-fx-background-color: white;;
+                    -fx-background-radius: 10;
+                    -fx-background-insets: 5;
+                    -fx-padding: 5;">
+                                <columns>
+                                    <TableColumn fx:id="trainNameColumn" text="Train Name" prefWidth="150"/>
+                                    <TableColumn fx:id="departureColumn" text="From" prefWidth="150"/>
+                                    <TableColumn fx:id="destinationColumn" text="To" prefWidth="150"/>
+                                    <TableColumn fx:id="departureTimeColumn" text="Departure Time" prefWidth="200"/>
+                                    <TableColumn fx:id="numberOfSeatsColumn" text="Seats" prefWidth="100"/>
+                                    <TableColumn fx:id="bookingTimeColumn" text="Booking Time" prefWidth="200"/>
+                                    <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
+                                </columns>
+                            </TableView>
+                        </VBox>
+                    </children>
+                    <padding>
+                        <Insets right="20" />
+                    </padding>
+                </VBox>
+            </children>
+        </HBox>
+    </children>
+</VBox>

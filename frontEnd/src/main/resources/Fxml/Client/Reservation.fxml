@@ -6,34 +6,35 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="CENTER" spacing="20.0" style="-fx-background-color: linear-gradient(to bottom, #ff8200, #ff8200, #000000, #000000);" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mouad.frontend.Controllers.Client.Reservation">
-    <children>
-        <Label text="My Bookings" textFill="WHITE">
-            <font>
-                <Font name="Berlin Sans FB Demi Bold" size="36.0"/>
-            </font>
-        </Label>
+<VBox alignment="CENTER" spacing="20.0"
+      style="-fx-background-color: linear-gradient(to bottom, #ff8200, #ff8200, #000000, #000000);"
+      xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.mouad.frontend.Controllers.Client.Reservation">
+    <Label text="My Bookings" textFill="WHITE">
+        <font>
+            <Font name="Berlin Sans FB Demi Bold" size="36.0"/>
+        </font>
+    </Label>
 
-        <Label fx:id="userNameLabel" textFill="WHITE">
-            <font>
-                <Font name="Berlin Sans FB" size="20.0"/>
-            </font>
-        </Label>
+    <Label fx:id="userNameLabel" textFill="WHITE">
+        <font>
+            <Font name="Berlin Sans FB" size="20.0"/>
+        </font>
+    </Label>
 
-        <TableView fx:id="bookingsTableView" prefHeight="500.0" prefWidth="1200.0"
-                   style="-fx-background-color: white;;
-                        -fx-background-radius: 10;
-                        -fx-background-insets: 5;
-                        -fx-padding: 5;">
-            <columns>
-                <TableColumn fx:id="trainNameColumn" text="Train Name" prefWidth="150"/>
-                <TableColumn fx:id="departureColumn" text="From" prefWidth="150"/>
-                <TableColumn fx:id="destinationColumn" text="To" prefWidth="150"/>
-                <TableColumn fx:id="departureTimeColumn" text="Departure Time" prefWidth="200"/>
-                <TableColumn fx:id="numberOfSeatsColumn" text="Seats" prefWidth="100"/>
-                <TableColumn fx:id="bookingTimeColumn" text="Booking Time" prefWidth="200"/>
-                <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
-            </columns>
-        </TableView>
-    </children>
+    <TableView fx:id="bookingsTableView" prefHeight="500.0" prefWidth="1200.0"
+               style="-fx-background-color: white;;
+                    -fx-background-radius: 10;
+                    -fx-background-insets: 5;
+                    -fx-padding: 5;">
+        <columns>
+            <TableColumn fx:id="trainNameColumn" text="Train Name" prefWidth="150"/>
+            <TableColumn fx:id="departureColumn" text="From" prefWidth="150"/>
+            <TableColumn fx:id="destinationColumn" text="To" prefWidth="150"/>
+            <TableColumn fx:id="departureTimeColumn" text="Departure Time" prefWidth="200"/>
+            <TableColumn fx:id="numberOfSeatsColumn" text="Seats" prefWidth="100"/>
+            <TableColumn fx:id="bookingTimeColumn" text="Booking Time" prefWidth="200"/>
+            <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
+        </columns>
+    </TableView>
 </VBox>

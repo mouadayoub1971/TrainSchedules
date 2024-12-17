@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
@@ -10,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox minHeight="750.0" minWidth="1250.0" style="-fx-background-color: #2e2f30; -fx-opacity: 1.0;" stylesheets="@../../styles/MainPage.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mouad.frontend.Controllers.Admin.StatisticsController">
+<VBox minHeight="750.0" minWidth="1250.0" style="-fx-background-color: #2e2f30; -fx-opacity: 1.0;" stylesheets="@../../styles/MainPage.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mouad.frontend.Controllers.Admin.StatisticsController">
    <children>
       <HBox alignment="CENTER_LEFT" spacing="10" VBox.vgrow="ALWAYS">
          <children>
@@ -20,7 +22,7 @@
                      <children>
                         <VBox alignment="CENTER" prefHeight="600.0" prefWidth="50.0" spacing="32" style="-fx-background-color: linear-gradient(to right, #da9020 80%, #242526 95%);">
                            <children>
-                              <ImageView fx:id="homeIcon" onMouseClicked="#onHomeClicked" fitHeight="26.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="homeIcon" fitHeight="26.0" fitWidth="24.0" onMouseClicked="#onHomeClicked" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../images/homepage.png" />
                                  </image>
@@ -28,7 +30,7 @@
                                     <Insets left="20" />
                                  </VBox.margin>
                               </ImageView>
-                              <ImageView fx:id="trainsIcon" onMouseClicked="#onTrainsClicked" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="trainsIcon" fitHeight="25.0" fitWidth="25.0" onMouseClicked="#onTrainsClicked" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../images/trains.png" />
                                  </image>
@@ -36,7 +38,7 @@
                                     <Insets left="20" />
                                  </VBox.margin>
                               </ImageView>
-                              <ImageView fx:id="schedulesIcon" onMouseClicked="#onSchedulesClicked" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="schedulesIcon" fitHeight="25.0" fitWidth="25.0" onMouseClicked="#onSchedulesClicked" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../images/calendar_1.png" />
                                  </image>
@@ -44,7 +46,7 @@
                                     <Insets left="20" />
                                  </VBox.margin>
                               </ImageView>
-                              <ImageView fx:id="bookingsIcon" onMouseClicked="#onBookingsClicked" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="bookingsIcon" fitHeight="25.0" fitWidth="25.0" onMouseClicked="#onBookingsClicked" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../images/booking.png" />
                                  </image>
@@ -52,7 +54,7 @@
                                     <Insets left="20" />
                                  </VBox.margin>
                               </ImageView>
-                              <ImageView fx:id="statisticsIcon" onMouseClicked="#onStatisticsClicked" styleClass="menu-icon active" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="statisticsIcon" fitHeight="25.0" fitWidth="25.0" onMouseClicked="#onStatisticsClicked" pickOnBounds="true" preserveRatio="true" styleClass="menu-icon active">
                                  <image>
                                     <Image url="@../../images/statistics.png" />
                                  </image>
@@ -60,7 +62,7 @@
                                     <Insets left="20" />
                                  </VBox.margin>
                               </ImageView>
-                              <ImageView fx:id="logoutIcon" onMouseClicked="#onLogoutClicked" fitHeight="25.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="logoutIcon" fitHeight="25.0" fitWidth="20.0" onMouseClicked="#onLogoutClicked" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../images/log-out.png" />
                                  </image>
@@ -149,40 +151,109 @@
             </StackPane>
             <VBox spacing="15" HBox.hgrow="ALWAYS">
                <children>
-                  <VBox alignment="CENTER_LEFT" style="-fx-background-color: #424344; -fx-background-radius: 10;" minHeight="60">
+                  <VBox alignment="CENTER_LEFT" minHeight="60" style="-fx-background-color: #424344; -fx-background-radius: 10;">
                      <padding>
-                        <Insets left="20" right="20" top="10" bottom="10"/>
+                        <Insets bottom="10" left="20" right="20" top="10" />
                      </padding>
                      <HBox alignment="CENTER_LEFT" spacing="10">
                         <children>
                            <Label text="Admin" textFill="#da9020">
                               <font>
-                                 <Font name="System Bold" size="24.0"/>
+                                 <Font name="System Bold" size="24.0" />
                               </font>
                            </Label>
-                           <Label text=">" textFill="#808080">
+                           <Label text="&gt;" textFill="#808080">
                               <font>
-                                 <Font name="System Bold" size="24.0"/>
+                                 <Font name="System Bold" size="24.0" />
                               </font>
                            </Label>
                            <Label text="Statistics" textFill="WHITE">
                               <font>
-                                 <Font name="System Bold" size="24.0"/>
+                                 <Font name="System Bold" size="24.0" />
                               </font>
                            </Label>
+                           <Button mnemonicParsing="false" text="Switch" />
                         </children>
                      </HBox>
                   </VBox>
-                  <VBox VBox.vgrow="ALWAYS" style="-fx-background-color: #3a3b3c; -fx-background-radius: 10;">
-                     <padding>
-                        <Insets top="20" right="20" bottom="20" left="20"/>
-                     </padding>
-                  </VBox>
+                  <TableView fx:id="logsTableView" prefHeight="672.0" prefWidth="1100.0" styleClass="custom-table" VBox.vgrow="ALWAYS">
+                     <columns>
+                        <TableColumn fx:id="timestampColumn" maxWidth="220" minWidth="220" prefWidth="220" text="Timestamp" />
+                        <TableColumn fx:id="logLevelColumn" maxWidth="220" minWidth="220" prefWidth="220" text="Log Level" />
+                        <TableColumn fx:id="threadColumn" maxWidth="220" minWidth="220" prefWidth="220" text="Thread" />
+                        <TableColumn fx:id="loggerNameColumn" maxWidth="220" minWidth="220" prefWidth="220" text="Logger Name" />
+                        <TableColumn fx:id="messageColumn" maxWidth="440.0" minWidth="181.0" prefWidth="323.0" text="Message" />
+                        <TableColumn fx:id="contextColumn" maxWidth="Infinity" minWidth="300" prefWidth="117.0" text="Context" />
+                     </columns>
+                  </TableView>
+
                </children>
-               <padding>
-                  <Insets top="20" right="20" bottom="20" left="20"/>
-               </padding>
+
             </VBox>
+            <VBox maxHeight="795" minWidth="1195" spacing="20.0" style="-fx-padding: 20; -fx-background-color: #2E2E2E; -fx-alignment: center " HBox.hgrow="ALWAYS">
+               <HBox spacing="20">
+                  <!-- Most Booking Users -->
+                  <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS">
+                     <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #FFDAB9; " text="Most Booking Users" />
+                     <TableView fx:id="mostBookingUsersTable" prefHeight="200" prefWidth="600" styleClass="table" VBox.vgrow="ALWAYS">
+                        <columns>
+                           <TableColumn fx:id="userEmailColumn" minWidth="200" prefWidth="293.0" styleClass="column" text="User Email" />
+                           <TableColumn fx:id="bookingCountColumn" minWidth="290" prefWidth="305.0" styleClass="column" text="Booking Count" />
+                        </columns>
+                     </TableView>
+                  </VBox>
+
+                  <!-- Most Reserved Routes -->
+                  <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS">
+                     <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #FFDAB9; -fx-alignment: center; " text="Most Reserved Routes" />
+                     <TableView fx:id="mostReservedRoutesTable" prefHeight="200" prefWidth="600" styleClass="table" VBox.vgrow="ALWAYS">
+                        <columns>
+                           <TableColumn fx:id="routeColumn" prefWidth="281.0" styleClass="column" text="Route" />
+                           <TableColumn fx:id="routeCountColumn" prefWidth="317.0" styleClass="column" text="Route Count" />
+                        </columns>
+                     </TableView>
+                  </VBox>
+               </HBox>
+
+               <HBox spacing="20">
+                  <!-- Most Reserved Durations -->
+                  <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS">
+                     <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #FFDAB9; " text="Most Reserved Durations" />
+                     <TableView fx:id="mostReservedDurationsTable" prefHeight="200" prefWidth="15.0" styleClass="table" VBox.vgrow="ALWAYS">
+                        <columns>
+                           <TableColumn fx:id="durationColumn" prefWidth="290.0" styleClass="column" text="Duration" />
+                           <TableColumn fx:id="durationCountColumn" prefWidth="316.0" styleClass="column" text="Booking Count" />
+                        </columns>
+                     </TableView>
+                  </VBox>
+
+                  <!-- Popular Destinations -->
+                  <VBox spacing="10" styleClass="card" HBox.hgrow="ALWAYS">
+                     <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #FFDAB9; " text="Popular Destinations" />
+                     <TableView fx:id="popularDestinationsTable" prefHeight="200" prefWidth="175.0" styleClass="table" VBox.vgrow="ALWAYS">
+                        <columns>
+                           <TableColumn fx:id="destinationColumn" prefWidth="284.0" styleClass="column" text="Destination" />
+                           <TableColumn fx:id="destinationCountColumn" prefWidth="306.0" styleClass="column" text="Booking Count" />
+                        </columns>
+                     </TableView>
+                  </VBox>
+               </HBox>
+
+               <!-- Optional: If you want to center the last table or leave it as a single table -->
+               <HBox alignment="CENTER" spacing="20">
+                  <!-- Popular Departures -->
+                  <VBox maxWidth="500" spacing="10" styleClass="card" HBox.hgrow="ALWAYS">
+                     <Label style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #FFDAB9; " text="Popular Departures" />
+                     <TableView fx:id="popularDeparturesTable" minWidth="550" prefHeight="200" styleClass="table" VBox.vgrow="ALWAYS">
+                        <columns>
+                           <TableColumn fx:id="departureColumn" prefWidth="254.0" styleClass="column" text="Departure" />
+                           <TableColumn fx:id="departureCountColumn" prefWidth="294.0" styleClass="column" text="Booking Count" />
+                        </columns>
+                     </TableView>
+                  </VBox>
+               </HBox>
+            </VBox>
+
          </children>
       </HBox>
    </children>
