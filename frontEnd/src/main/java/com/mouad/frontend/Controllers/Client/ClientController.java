@@ -442,4 +442,7 @@ public class ClientController {
                 break;
         }
     }
+
+    public void home(MouseEvent mouseEvent) {
+    }
 }

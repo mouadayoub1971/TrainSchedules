@@ -5,16 +5,16 @@ import com.mouad.frontend.Models.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.scene.control.Alert;
+
 import java.io.IOException;
 import java.net.URL;
 import java.time.Duration;
@@ -49,6 +49,8 @@ import org.json.JSONObject;
 
 public class StatisticsController {
 
+    public Button switchButton;
+    public VBox DashboardTableView;
     @FXML private ImageView homeIcon;
     @FXML private ImageView trainsIcon;
     @FXML private ImageView schedulesIcon;
@@ -174,11 +176,31 @@ public class StatisticsController {
             schedulesLabel.setOnMouseClicked(event -> onSchedulesClicked());
             bookingsLabel.setOnMouseClicked(event -> onBookingsClicked());
             statisticsLabel.setOnMouseClicked(event -> onStatisticsClicked());
+
+            DashboardTableView.setVisible(false);
+            DashboardTableView.setManaged(false);
+            logsTableView.setVisible(true);
+            logsTableView.setManaged(true);
+            switchButton.setOnAction(this::toggleVisibility);
         } catch (Exception e) {
             System.err.println("Error initializing StatisticsController: " + e.getMessage());
             e.printStackTrace();
         }
     }
+    private void toggleVisibility(ActionEvent event) {
+        // Toggle visibility of dashboard table and logs table
+        boolean isDashboardVisible = DashboardTableView.isVisible();
+
+        DashboardTableView.setVisible(!isDashboardVisible);
+        DashboardTableView.setManaged(!isDashboardVisible);
+
+        logsTableView.setVisible(isDashboardVisible);
+        logsTableView.setManaged(isDashboardVisible);
+
+        // Update button text (optional)
+        switchButton.setText(isDashboardVisible ? "Show Logs" : "Show Dashboard");
+    }
+
     // Setup table column value factories
     private void setupTableColumns() {
         // User Bookings
