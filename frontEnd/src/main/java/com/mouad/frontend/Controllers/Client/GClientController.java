@@ -6,7 +6,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -49,6 +48,8 @@ public class GClientController implements Initializable {
     private Label bookingsLabel;
     @FXML
     private Label logoutLabel;
+    private String firstName;
+    private String email;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -79,6 +80,15 @@ public class GClientController implements Initializable {
         }
     }
 
+    public void setUserInfo(String firstName, String email) {
+        System.out.println("Setting user info - firstName: " + firstName + ", email: " + email );
+        this.firstName = firstName;
+        this.email = email;
+        if (welcomeLabel != null) {
+            welcomeLabel.setText("Welcome, " + firstName + "!!");
+        }
+    }
+
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);
@@ -95,14 +105,51 @@ public class GClientController implements Initializable {
 
     @FXML
     private void search() {
-        setActiveButton(searchBtn);
-        navigateToPage("Search.fxml");
+        try {
+            String fxmlPath = "/Fxml/Client/Client.fxml";
+            System.out.println("Loading client FXML: " + fxmlPath);
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent root = loader.load();
+
+            // Get the client controller and set the user info
+            ClientController clientController = loader.getController();
+            String displayName = this.email;
+            clientController.setUserInfo(displayName, this.email);
+            Stage stage = (Stage) welcomeLabel.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setTitle("Client Dashboard - " + this.email);
+            stage.setScene(scene);
+        } catch (IOException e){
+            System.out.println("the error  " + e);
+        }
+//        setActiveButton(searchBtn);
+//        navigateToPage("Search.fxml");
+
     }
 
     @FXML
     private void profile() {
-        setActiveButton(profileBtn);
-        navigateToPage("Profile.fxml");
+        try {
+            String fxmlPath = "/Fxml/Client/Profile.fxml";
+            System.out.println("Loading client FXML: " + fxmlPath);
+
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
+            Parent root = loader.load();
+
+            // Get the client controller and set the user info
+            ProfileController clientController = loader.getController();
+            String displayName = this.email;
+            clientController.setUserInfo(displayName, this.email);
+            Stage stage = (Stage) welcomeLabel.getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setTitle("GProfile Dashboard - " + this.email);
+            stage.setScene(scene);
+        } catch (IOException e){
+            System.out.println("the error  " + e);
+        }
+//        setActiveButton(profileBtn);
+//        navigateToPage("Profile.fxml");
     }
 
     @FXML

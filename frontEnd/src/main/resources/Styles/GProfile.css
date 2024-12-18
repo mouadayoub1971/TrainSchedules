@@ -63,7 +63,7 @@
     -fx-opacity: 0.8;
 }
 
-.menu-icon.active {
+.menu-icon active {
     -fx-opacity: 1;
 }
 

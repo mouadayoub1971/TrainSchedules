@@ -15,7 +15,7 @@ module com.mouad.frontend {
     requires com.fasterxml.jackson.core;
     requires com.fasterxml.jackson.annotation;
     opens com.mouad.frontend.Controllers.Admin to javafx.fxml;
-    opens com.mouad.frontend.Controllers.Client to javafx.fxml; 
+    opens com.mouad.frontend.Controllers.Client to javafx.fxml,java.base,javafx.graphics;
     opens com.mouad.frontend to javafx.fxml, javafx.graphics;
 
     opens com.mouad.frontend.Controllers to javafx.fxml;

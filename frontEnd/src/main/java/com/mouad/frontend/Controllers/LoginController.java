@@ -1,5 +1,6 @@
 package com.mouad.frontend.Controllers;
 
+import com.mouad.frontend.Controllers.Client.GClientController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -80,19 +81,19 @@ public class LoginController {
                         stage.setScene(scene);
                     } else {
                         // Load the client dashboard
-                        String fxmlPath = "/Fxml/Client/Client.fxml";
+                        String fxmlPath = "/Fxml/Client/GMainPage.fxml";
                         System.out.println("Loading client FXML: " + fxmlPath);
                         
                         FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
                         Parent root = loader.load();
                         
                         // Get the client controller and set the user info
-                        ClientController clientController = loader.getController();
+                        GClientController clientController = loader.getController();
                         String displayName = loginResponse.getEmail();
                         clientController.setUserInfo(displayName, loginResponse.getEmail());
                         
                         Scene scene = new Scene(root);
-                        stage.setTitle("Client Dashboard - " + loginResponse.getEmail());
+                        stage.setTitle("GMain Dashboard - " + loginResponse.getEmail());
                         stage.setScene(scene);
                     }
                     stage.show();

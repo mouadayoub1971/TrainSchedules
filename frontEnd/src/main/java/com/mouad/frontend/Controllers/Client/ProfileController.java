@@ -3,6 +3,8 @@ package com.mouad.frontend.Controllers.Client;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -13,7 +15,17 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class GProfileController implements Initializable {
+public class ProfileController implements Initializable {
+    public ImageView homeIcon;
+    public ImageView searchIcon;
+    public ImageView profileIcon;
+    public ImageView bookingsIcon;
+    public ImageView logoutIcon;
+    public Label homeLabel;
+    public Label searchLabel;
+    public Label profileLabel;
+    public Label bookingsLabel;
+    public Label logoutLabel;
     @FXML
     private HBox homeBtn;
     @FXML
@@ -24,6 +36,8 @@ public class GProfileController implements Initializable {
     private HBox bookingsBtn;
     @FXML
     private HBox logoutBtn;
+    private String firstName;
+    private String email;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -47,6 +61,12 @@ public class GProfileController implements Initializable {
         } catch (IOException e) {
             showAlert("Navigation Error", "Could not load page: " + e.getMessage());
         }
+    }
+    public void setUserInfo(String firstName, String email) {
+        System.out.println("Setting user info - firstName: " + firstName + ", email: " + email );
+        this.firstName = firstName;
+        this.email = email;
+
     }
 
     private void showAlert(String title, String message) {
