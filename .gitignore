@@ -34,3 +34,9 @@ build/
 
 ###application yaml ###
 src/main/resources/*.yml
+
+# Ignore everything in /data
+/data/*
+
+# Don't ignore mouad.ipynb
+!/data/mouad.ipynb
