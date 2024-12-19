@@ -1,0 +1,109 @@
+.dialog-container {
+    -fx-background-color: #2e2f30;
+    -fx-background-radius: 5;
+    -fx-border-color: #da9020;
+    -fx-border-width: 2;
+    -fx-border-radius: 5;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 10, 0, 0, 0);
+}
+
+.dialog-title {
+    -fx-font-size: 20px;
+    -fx-font-family: "Segoe UI Semibold";
+    -fx-font-weight: bold;
+    -fx-fill: #da9020;
+    -fx-effect: dropshadow(one-pass-box, rgba(218,144,32,0.3), 1, 0, 0, 0);
+}
+
+Label {
+    -fx-text-fill: white;
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 14px;
+}
+
+.info-label {
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-family: "Segoe UI";
+    -fx-letter-spacing: 0.5px;
+}
+
+.total-cost-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #da9020;
+    -fx-effect: dropshadow(one-pass-box, rgba(218,144,32,0.3), 1, 0, 0, 0);
+}
+
+.confirm-button {
+    -fx-background-color: #da9020;
+    -fx-text-fill: white;
+    -fx-font-family: "Segoe UI";
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-min-width: 100;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-background-radius: 5;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+.confirm-button:hover {
+    -fx-background-color: #eaa030;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 8, 0, 0, 3);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.confirm-button:pressed {
+    -fx-background-color: #c88010;
+}
+
+.cancel-button {
+    -fx-background-color: #4a4b4c;
+    -fx-text-fill: white;
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 14px;
+    -fx-min-width: 100;
+    -fx-padding: 10 20;
+    -fx-cursor: hand;
+    -fx-background-radius: 5;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 5, 0, 0, 2);
+}
+
+.cancel-button:hover {
+    -fx-background-color: #5a5b5c;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 8, 0, 0, 3);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.cancel-button:pressed {
+    -fx-background-color: #3a3b3c;
+}
+
+.spinner {
+    -fx-pref-width: 100px;
+    -fx-background-color: #4a4b4c;
+    -fx-text-fill: white;
+}
+
+.spinner .increment-arrow-button,
+.spinner .decrement-arrow-button {
+    -fx-background-color: #da9020;
+}
+
+.spinner .increment-arrow-button:hover,
+.spinner .decrement-arrow-button:hover {
+    -fx-background-color: #eaa030;
+}
+
+.spinner .increment-arrow-button:pressed,
+.spinner .decrement-arrow-button:pressed {
+    -fx-background-color: #c88010;
+}
+
+.spinner .increment-arrow,
+.spinner .decrement-arrow {
+    -fx-background-color: white;
+}

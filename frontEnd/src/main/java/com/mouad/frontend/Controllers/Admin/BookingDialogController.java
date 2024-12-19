@@ -295,14 +295,6 @@ public class BookingDialogController {
         }
     }
 
-    private void showAlert(String title, String message, Alert.AlertType type) {
-        if (type == Alert.AlertType.ERROR) {
-            CustomAlert.showError(title, message);
-        } else {
-            CustomAlert.showInformation(title, message);
-        }
-    }
-
     private void showError(String message) {
         CustomAlert.showError("Error", message);
     }
@@ -329,7 +321,7 @@ public class BookingDialogController {
         }
 
         if (errors.length() > 0) {
-            showAlert("Validation Error", errors.toString(), Alert.AlertType.ERROR);
+            CustomAlert.showError("Validation Error", errors.toString());
             return false;
         }
 

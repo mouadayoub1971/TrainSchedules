@@ -1,0 +1,66 @@
+/* Admin MainPage Styles */
+.menu-icon {
+    -fx-opacity: 0.7;
+    -fx-cursor: hand;
+}
+
+.menu-icon:hover {
+    -fx-opacity: 1.0;
+}
+
+.menu-icon.active {
+    -fx-opacity: 1.0;
+}
+
+.menu-label {
+    -fx-text-fill: #a0a0a0;
+    -fx-cursor: hand;
+    -fx-padding: 5px 10px;
+    -fx-background-radius: 5;
+}
+
+.menu-label:hover {
+    -fx-text-fill: white;
+    -fx-background-color: #3a3b3c;
+}
+
+.menu-label.active {
+    -fx-text-fill: white;
+    -fx-background-color: #3a3b3c;
+}
+
+.stat-card {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
+    -fx-background-radius: 10;
+    -fx-padding: 20;
+}
+
+.stat-number {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #da9020;
+}
+
+.action-card {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 10, 0, 0, 0);
+    -fx-background-radius: 10;
+    -fx-cursor: hand;
+    -fx-transition: all 0.3s;
+}
+
+.action-card:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 15, 0, 0, 0);
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+}
+
+.action-card-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.action-card-description {
+    -fx-text-fill: #a0a0a0;
+    -fx-font-size: 14px;
+}

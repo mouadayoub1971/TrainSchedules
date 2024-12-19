@@ -116,17 +116,26 @@ public class AdminService {
         private String email;
         private String firstName;
         private String secondName;
+        private int userId;
 
+        // Getters and setters
         public String getMessage() { return message; }
         public void setMessage(String message) { this.message = message; }
+        
         public boolean isAdmin() { return admin; }
         public void setAdmin(boolean admin) { this.admin = admin; }
+        
         public String getEmail() { return email; }
         public void setEmail(String email) { this.email = email; }
+        
         public String getFirstName() { return firstName; }
         public void setFirstName(String firstName) { this.firstName = firstName; }
+        
         public String getSecondName() { return secondName; }
         public void setSecondName(String secondName) { this.secondName = secondName; }
+
+        public int getUserId() { return userId; }
+        public void setUserId(int userId) { this.userId = userId; }
     }
 
     public LoginResponse login(String email, String password) {
@@ -147,6 +156,8 @@ public class AdminService {
                 return loginResponse;
             }
         } catch (Exception e) {
+            System.err.println("Login error: " + e.getMessage());
+            e.printStackTrace();
             LoginResponse errorResponse = new LoginResponse();
             errorResponse.setMessage("Error: " + e.getMessage());
             return errorResponse;

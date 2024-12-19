@@ -27,6 +27,7 @@ import java.io.IOException;
 import java.net.URL;
 import com.mouad.frontend.Components.CustomAlert;
 import java.util.Optional;
+import javafx.scene.control.ButtonType;
 
 public class TrainsController {
     private final TrainService trainService;
@@ -213,18 +214,18 @@ public class TrainsController {
     }
 
     private void deleteTrain(JsonNode train) {
-        Optional<Boolean> result = CustomAlert.showConfirmation(
+        Optional<ButtonType> result = CustomAlert.showConfirmation(
             "Delete Train",
             "Are you sure you want to delete this train?"
         );
 
-        if (result.isPresent() && result.get()) {
+        if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
                 trainService.deleteTrain(train.get("id").asLong());
                 loadTrains();
-                CustomAlert.showInformation("Success", "Train deleted successfully!");
+                CustomAlert.showSuccess("Success", "Train deleted successfully!");
             } catch (Exception e) {
-                CustomAlert.showInformation("Error", "Failed to delete train: " + e.getMessage());
+                CustomAlert.showError("Error", "Failed to delete train: " + e.getMessage());
             }
         }
     }
@@ -286,7 +287,7 @@ public class TrainsController {
         statusCombo.setValue("active");
     }
 
-    private void showAlert(String title, String content, Alert.AlertType type) {
+    private void showAlert(String title, String content) {
         CustomAlert.showInformation(title, content);
     }
 

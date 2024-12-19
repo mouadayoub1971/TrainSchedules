@@ -43,7 +43,11 @@ public class ApiClient implements AutoCloseable {
 
     public <T> T post(String endpoint, Object requestBody, Class<T> responseType) throws Exception {
         try (CloseableHttpClient client = getHttpClient()) {
-            HttpPost httpPost = new HttpPost(baseUrl + endpoint);
+            // Remove leading slash if present to avoid double slashes
+            endpoint = endpoint.startsWith("/") ? endpoint.substring(1) : endpoint;
+            String url = baseUrl + "/" + endpoint;
+            
+            HttpPost httpPost = new HttpPost(url);
             httpPost.setHeader("Content-Type", "application/json");
 
             String jsonBody = objectMapper.writeValueAsString(requestBody);
@@ -65,7 +69,11 @@ public class ApiClient implements AutoCloseable {
 
     public String post(String endpoint, Object requestBody) throws Exception {
         try (CloseableHttpClient client = getHttpClient()) {
-            HttpPost httpPost = new HttpPost(baseUrl + endpoint);
+            // Remove leading slash if present to avoid double slashes
+            endpoint = endpoint.startsWith("/") ? endpoint.substring(1) : endpoint;
+            String url = baseUrl + "/" + endpoint;
+            
+            HttpPost httpPost = new HttpPost(url);
             httpPost.setHeader("Content-Type", "application/json");
 
             String jsonBody = objectMapper.writeValueAsString(requestBody);
@@ -85,7 +93,7 @@ public class ApiClient implements AutoCloseable {
                 if (statusCode >= 200 && statusCode < 300) {
                     return responseBody;
                 } else {
-                    throw new RuntimeException("API call failed with status code: " + statusCode + ", response: " + responseBody);
+                    throw new RuntimeException(responseBody);
                 }
             }
         }
@@ -111,7 +119,11 @@ public class ApiClient implements AutoCloseable {
 
     public String put(String endpoint, Object requestBody) throws Exception {
         try (CloseableHttpClient client = getHttpClient()) {
-            HttpPut httpPut = new HttpPut(baseUrl + endpoint);
+            // Remove leading slash if present to avoid double slashes
+            endpoint = endpoint.startsWith("/") ? endpoint.substring(1) : endpoint;
+            String url = baseUrl + "/" + endpoint;
+            
+            HttpPut httpPut = new HttpPut(url);
             httpPut.setHeader("Content-Type", "application/json");
 
             if (requestBody != null) {
@@ -135,23 +147,32 @@ public class ApiClient implements AutoCloseable {
 
     public String delete(String endpoint) throws Exception {
         try (CloseableHttpClient client = getHttpClient()) {
-            HttpDelete httpDelete = new HttpDelete(baseUrl + endpoint);
+            // Remove leading slash if present to avoid double slashes
+            endpoint = endpoint.startsWith("/") ? endpoint.substring(1) : endpoint;
+            String url = baseUrl + "/" + endpoint;
+            
+            System.out.println("Making DELETE request to: " + url);
+            
+            HttpDelete httpDelete = new HttpDelete(url);
             httpDelete.setHeader("Content-Type", "application/json");
 
             try (CloseableHttpResponse response = client.execute(httpDelete)) {
                 int statusCode = response.getCode();
-                
-                // For 204 No Content, return empty string
-                if (statusCode == 204) {
-                    return "";
-                }
-                
-                String responseBody = EntityUtils.toString(response.getEntity());
+                System.out.println("Response status code: " + statusCode);
                 
                 if (statusCode >= 200 && statusCode < 300) {
+                    // For 204 No Content, return empty string
+                    if (statusCode == 204 || response.getEntity() == null) {
+                        return "";
+                    }
+                    
+                    String responseBody = EntityUtils.toString(response.getEntity());
+                    System.out.println("Response body: " + responseBody);
                     return responseBody;
                 } else {
-                    throw new RuntimeException("API call failed with status code: " + statusCode + ", response: " + responseBody);
+                    String responseBody = EntityUtils.toString(response.getEntity());
+                    System.out.println("Error response body: " + responseBody);
+                    throw new RuntimeException(responseBody);
                 }
             }
         }

@@ -4,6 +4,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -55,15 +56,15 @@ public class CustomAlert {
         stage.setScene(scene);
         
         // Set up result handling
-        final boolean[] result = {false};
+        final ButtonType[] result = {null};
         
         confirmButton.setOnAction(e -> {
-            result[0] = true;
+            result[0] = ButtonType.OK;
             stage.close();
         });
         
         cancelButton.setOnAction(e -> {
-            result[0] = false;
+            result[0] = ButtonType.CANCEL;
             stage.close();
         });
         
@@ -73,15 +74,29 @@ public class CustomAlert {
         return stage;
     }
     
-    public static Optional<Boolean> showConfirmation(String title, String message) {
+    public static Optional<ButtonType> showConfirmation(String title, String message) {
         Stage stage = createDialogStage(title, message, true);
         stage.showAndWait();
-        boolean[] result = (boolean[]) stage.getProperties().get("result");
-        return Optional.of(result[0]);
+        ButtonType[] result = (ButtonType[]) stage.getProperties().get("result");
+        return Optional.ofNullable(result[0]);
     }
     
     public static void showInformation(String title, String message) {
         Stage stage = createDialogStage(title, message, false);
         stage.showAndWait();
+    }
+
+    public static void showError(String title, String message) {
+        Stage stage = createDialogStage(title, message, false);
+        stage.showAndWait();
+    }
+
+    public static void showSuccess(String title, String message) {
+        Stage stage = createDialogStage(title, message, false);
+        stage.showAndWait();
+    }
+
+    public static void showInfo(String title, String message) {
+        showInformation(title, message);
     }
 }

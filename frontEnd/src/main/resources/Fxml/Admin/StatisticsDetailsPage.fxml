@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+
+<AnchorPane style="-fx-background-color: rgba(0, 0, 0, 0.8);" prefWidth="1250" prefHeight="750" maxWidth="1250" maxHeight="750" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mouad.frontend.Controllers.Admin.BookingDashboardControllerv1">
+    <stylesheets>
+        <URL value="@../../styles/StatisticsStyle.css" />
+    </stylesheets>
+
+    <VBox AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" style="-fx-background-color: transparent;">
+        <HBox alignment="CENTER" spacing="20" style="-fx-padding: 15 20 10 20; -fx-background-color: #1a1a1a;">
+            <HBox HBox.hgrow="ALWAYS" alignment="CENTER">
+                <Label text="Secure Analytics Dashboard" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #00ff00;"/>
+                <ImageView fitHeight="32" fitWidth="32">
+                    <Image url="@../../images/secure.png"/>
+                </ImageView>
+            </HBox>
+            <Button text="✕" styleClass="close-button" onAction="#handleClose"/>
+        </HBox>
+
+        <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;">
+            <VBox spacing="15" style="-fx-padding: 15;">
+                <!-- First Row -->
+                <HBox spacing="15">
+                    <VBox styleClass="data-card" HBox.hgrow="ALWAYS" minWidth="600">
+                        <VBox styleClass="card-header">
+                            <Label text="Most Active Users" styleClass="card-title"/>
+                            <Text text="Top users by booking frequency" styleClass="card-subtitle"/>
+                        </VBox>
+                        <TableView fx:id="mostBookingUsersTable" styleClass="secure-table" prefHeight="180">
+                            <columns>
+                                <TableColumn fx:id="userEmailColumn" text="User Email" prefWidth="450"/>
+                                <TableColumn fx:id="bookingCountColumn" text="Booking Count" prefWidth="150"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+
+                    <VBox styleClass="data-card" HBox.hgrow="ALWAYS" minWidth="600">
+                        <VBox styleClass="card-header">
+                            <Label text="Journey Duration Analysis" styleClass="card-title"/>
+                            <Text text="Most common journey durations" styleClass="card-subtitle"/>
+                        </VBox>
+                        <TableView fx:id="mostReservedDurationsTable" styleClass="secure-table" prefHeight="180">
+                            <columns>
+                                <TableColumn fx:id="durationColumn" text="Duration" prefWidth="450"/>
+                                <TableColumn fx:id="durationCountColumn" text="Frequency" prefWidth="150"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </HBox>
+
+                <!-- Second Row -->
+                <HBox spacing="15">
+                    <VBox styleClass="data-card" HBox.hgrow="ALWAYS" minWidth="600">
+                        <VBox styleClass="card-header">
+                            <Label text="Starting Points Analysis" styleClass="card-title"/>
+                            <Text text="Most frequent departure locations" styleClass="card-subtitle"/>
+                        </VBox>
+                        <TableView fx:id="popularDeparturesTable" styleClass="secure-table" prefHeight="180">
+                            <columns>
+                                <TableColumn fx:id="departureColumn" text="Departure" prefWidth="450"/>
+                                <TableColumn fx:id="departureCountColumn" text="Frequency" prefWidth="150"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+
+                    <VBox styleClass="data-card" HBox.hgrow="ALWAYS" minWidth="600">
+                        <VBox styleClass="card-header">
+                            <Label text="Top Destinations" styleClass="card-title"/>
+                            <Text text="Most popular arrival points" styleClass="card-subtitle"/>
+                        </VBox>
+                        <TableView fx:id="popularDestinationsTable" styleClass="secure-table" prefHeight="180">
+                            <columns>
+                                <TableColumn fx:id="destinationColumn" text="Destination" prefWidth="450"/>
+                                <TableColumn fx:id="destinationCountColumn" text="Frequency" prefWidth="150"/>
+                            </columns>
+                        </TableView>
+                    </VBox>
+                </HBox>
+
+                <!-- Third Row (Full Width) -->
+                <VBox styleClass="data-card" maxWidth="Infinity">
+                    <VBox styleClass="card-header">
+                        <Label text="Popular Routes" styleClass="card-title"/>
+                        <Text text="Most frequently booked routes" styleClass="card-subtitle"/>
+                    </VBox>
+                    <TableView fx:id="mostReservedRoutesTable" styleClass="secure-table" prefHeight="200" maxWidth="Infinity" >
+                        <columns>
+                            <TableColumn fx:id="routeColumn" text="Route" prefWidth="800"/>
+                            <TableColumn fx:id="routeCountColumn" text="Frequency" prefWidth="200"/>
+                        </columns>
+                    </TableView>
+                </VBox>
+            </VBox>
+        </ScrollPane>
+    </VBox>
+</AnchorPane>

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mouad.frontend.Services.AdminService;
 import com.mouad.frontend.Services.BookingService;
+import com.mouad.frontend.Services.CounterService;
 import com.mouad.frontend.Components.CustomAlert;
 import com.mouad.frontend.Views.ViewsFactory;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -36,9 +37,6 @@ import java.util.Optional;
 import java.util.function.Predicate;
 
 public class BookingsController {
-    public Label totalBookingsLabel;
-    public Label activeBookingsLabel;
-    public Label todayBookingsLabel;
     @FXML private ImageView homeIcon;
     @FXML private ImageView trainsIcon;
     @FXML private ImageView schedulesIcon;
@@ -61,10 +59,19 @@ public class BookingsController {
 
     @FXML private ComboBox<String> statusFilter;
 
+    @FXML
+    private Label totalBookingsLabel;
+    
+    @FXML
+    private Label activeBookingsLabel;
+    
+    @FXML
+    private Label todayBookingsLabel;
+
     private static final String STATUS_ALL = "All";
     private static final String STATUS_CONFIRMED = "CONFIRMED";
-    private static final String STATUS_CANCELLED = "CANCELLED";
-    private static final String STATUS_PENDING = "PENDING";
+    private static final String STATUS_CANCELED = "CANCELED";
+    private static final String STATUS_COMPLETED = "COMPLETED";
 
     private final AdminService adminService;
     private final BookingService bookingService;
@@ -79,13 +86,8 @@ public class BookingsController {
     @FXML
     private void initialize() {
         try {
-
-
-            totalBookingsLabel.setText("" + bookingService.getTotalBookings());
-            activeBookingsLabel.setText(""+bookingService.getActiveBookings());
-            todayBookingsLabel.setText("" + bookingService.getTodayBookings());
             // Initialize status filter
-            statusFilter.getItems().addAll(STATUS_ALL, STATUS_CONFIRMED, STATUS_PENDING, STATUS_CANCELLED);
+            statusFilter.getItems().addAll(STATUS_ALL, STATUS_CONFIRMED, STATUS_CANCELED, STATUS_COMPLETED);
             statusFilter.setValue(STATUS_ALL);
             statusFilter.setStyle("-fx-background-color: #424344; -fx-text-fill: white;");
             
@@ -97,6 +99,7 @@ public class BookingsController {
             setupNavigationHandlers();
             setupTableColumns();
             loadBookings();
+            loadStatistics();
             setupFilters();
         } catch (Exception e) {
             System.err.println("Error initializing BookingsController: " + e.getMessage());
@@ -311,6 +314,24 @@ public class BookingsController {
         }
     }
 
+    private void loadStatistics() {
+        try {
+            // Get stats from services
+            int totalBookings = bookingService.getTotalBookings();
+            int activeBookings = bookingService.getActiveBookings();
+            int todayBookings = bookingService.getTodayBookings();
+
+            // Animate the counters
+            CounterService.animateCounter(totalBookingsLabel, totalBookings, "Total Bookings");
+            CounterService.animateCounter(activeBookingsLabel, activeBookings, "Active Bookings");
+            CounterService.animateCounter(todayBookingsLabel, todayBookings, "Today's Bookings");
+        } catch (Exception e) {
+            System.err.println("Error loading booking statistics: " + e.getMessage());
+            e.printStackTrace();
+            CustomAlert.showInformation("Error", "Could not load booking statistics: " + e.getMessage());
+        }
+    }
+
     private void setupFilters() {
         // Setup date pickers
         fromDatePicker.setStyle("-fx-text-fill: white; -fx-prompt-text-fill: white;");
@@ -396,19 +417,19 @@ public class BookingsController {
     }
 
     private void onDeleteBooking(JsonNode booking) {
-        Optional<Boolean> result = CustomAlert.showConfirmation(
+        Optional<ButtonType> result = CustomAlert.showConfirmation(
             "Delete Booking",
             "Are you sure you want to delete this booking?"
         );
         
-        if (result.isPresent() && result.get()) {
+        if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
                 bookingService.deleteBooking(booking.get("id").asInt());
                 loadBookings(); // Refresh the table
-                CustomAlert.showInformation("Success", "Booking deleted successfully");
+                CustomAlert.showSuccess("Success", "Booking deleted successfully");
             } catch (Exception e) {
                 System.err.println("Error deleting booking: " + e.getMessage());
-                CustomAlert.showInformation("Error", "Could not delete booking: " + e.getMessage());
+                CustomAlert.showError("Error", "Failed to delete booking: " + e.getMessage());
             }
         }
     }
@@ -498,8 +519,8 @@ public class BookingsController {
     private String getStatusColor(String status) {
         return switch (status.toUpperCase()) {
             case STATUS_CONFIRMED -> "green";
-            case STATUS_PENDING -> "orange";
-            case STATUS_CANCELLED -> "red";
+            case STATUS_CANCELED -> "orange";
+            case STATUS_COMPLETED -> "blue";
             default -> "black";
         };
     }

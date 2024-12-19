@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import org.json.JSONObject;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 public class BookingDashboardControllerv1 {
     @FXML private TableView<UserBooking> mostBookingUsersTable;
@@ -77,6 +78,13 @@ public class BookingDashboardControllerv1 {
     // Constructor
     public BookingDashboardControllerv1() {
         // Default constructor
+    }
+
+    @FXML
+    private void handleClose() {
+        // Get the stage from any node in the scene
+        Stage stage = (Stage) mostBookingUsersTable.getScene().getWindow();
+        stage.close();
     }
 
     // Initialization method called by JavaFX after FXML is loaded
@@ -231,10 +239,10 @@ public class BookingDashboardControllerv1 {
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-            } finally {
-                if (consumer != null) {
-                    consumer.close();
-                }
+//            } finally {
+//                if (consumer != null) {
+//                    consumer.close();
+//                }
             }
         });
         kafkaThread.setDaemon(true);
@@ -421,5 +429,11 @@ public class BookingDashboardControllerv1 {
     private String extractDestination(String message, String prefix) {
         int startIndex = message.indexOf(prefix) + prefix.length();
         return message.substring(startIndex).trim();
+    }
+
+    @FXML
+    private void closeDialog() {
+        // Get the stage from any control in the scene and close it
+        mostBookingUsersTable.getScene().getWindow().hide();
     }
 }

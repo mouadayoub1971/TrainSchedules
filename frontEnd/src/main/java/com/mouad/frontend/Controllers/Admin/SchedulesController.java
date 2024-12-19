@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
@@ -25,6 +26,7 @@ import com.mouad.frontend.Services.TrainService;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.layout.HBox;
 import java.util.Optional;
+import javafx.scene.control.ButtonType;
 
 public class SchedulesController {
 
@@ -87,7 +89,7 @@ public class SchedulesController {
         } catch (Exception e) {
             System.err.println("Error initializing SchedulesController: " + e.getMessage());
             e.printStackTrace();
-            showAlert("Error", "Failed to initialize schedules page: " + e.getMessage(), Alert.AlertType.ERROR);
+            CustomAlert.showError("Error", "Failed to initialize schedules page: " + e.getMessage());
         }
     }
 
@@ -182,10 +184,23 @@ public class SchedulesController {
                 ObservableList<JsonNode> trainsList = FXCollections.observableArrayList();
                 trains.forEach(trainsList::add);
                 trainFilterCombo.setItems(trainsList);
+                
+                // Set the display converter to show only the train name
+                trainFilterCombo.setConverter(new StringConverter<JsonNode>() {
+                    @Override
+                    public String toString(JsonNode train) {
+                        return train != null ? train.get("trainName").asText() : "";
+                    }
+
+                    @Override
+                    public JsonNode fromString(String string) {
+                        return null; // Not needed for this use case
+                    }
+                });
             }
         } catch (Exception e) {
             System.err.println("Error loading trains: " + e.getMessage());
-            showAlert("Error", "Failed to load trains: " + e.getMessage(), Alert.AlertType.ERROR);
+            CustomAlert.showError("Error", "Failed to load trains: " + e.getMessage());
         }
     }
 
@@ -198,7 +213,7 @@ public class SchedulesController {
             }
         } catch (Exception e) {
             System.err.println("Error loading schedules: " + e.getMessage());
-            showAlert("Error", "Failed to load schedules: " + e.getMessage(), Alert.AlertType.ERROR);
+            CustomAlert.showError("Error", "Failed to load schedules: " + e.getMessage());
         }
     }
 
@@ -241,7 +256,7 @@ public class SchedulesController {
             }
         } catch (Exception e) {
             System.err.println("Error applying filters: " + e.getMessage());
-            showAlert("Error", "Failed to apply filters: " + e.getMessage(), Alert.AlertType.ERROR);
+            CustomAlert.showError("Error", "Failed to apply filters: " + e.getMessage());
         }
     }
 
@@ -251,7 +266,7 @@ public class SchedulesController {
             showScheduleDialog(null);
         } catch (Exception e) {
             System.err.println("Error showing add schedule dialog: " + e.getMessage());
-            showAlert("Error", "Failed to show add schedule dialog: " + e.getMessage(), Alert.AlertType.ERROR);
+            CustomAlert.showError("Error", "Failed to show add schedule dialog: " + e.getMessage());
         }
     }
 
@@ -260,21 +275,24 @@ public class SchedulesController {
             showScheduleDialog(schedule);
         } catch (Exception e) {
             System.err.println("Error showing edit schedule dialog: " + e.getMessage());
-            showAlert("Error", "Failed to show edit schedule dialog: " + e.getMessage(), Alert.AlertType.ERROR);
+            CustomAlert.showError("Error", "Failed to show edit schedule dialog: " + e.getMessage());
         }
     }
 
     private void deleteSchedule(JsonNode schedule) {
         try {
-            Optional<Boolean> result = CustomAlert.showConfirmation("Delete Schedule", "Are you sure you want to delete this schedule?");
-            if (result.isPresent() && result.get()) {
+            Optional<ButtonType> result = CustomAlert.showConfirmation(
+                "Delete Schedule", 
+                "Are you sure you want to delete this schedule?"
+            );
+            if (result.isPresent() && result.get() == ButtonType.OK) {
                 scheduleService.deleteSchedule(schedule.get("id").asInt());
                 loadSchedules();
-                showAlert("Success", "Schedule deleted successfully", Alert.AlertType.INFORMATION);
+                CustomAlert.showSuccess("Success", "Schedule deleted successfully");
             }
         } catch (Exception e) {
             System.err.println("Error deleting schedule: " + e.getMessage());
-            showAlert("Error", "Failed to delete schedule: " + e.getMessage(), Alert.AlertType.ERROR);
+            CustomAlert.showError("Error", "Failed to delete schedule: " + e.getMessage());
         }
     }
 
@@ -287,8 +305,7 @@ public class SchedulesController {
             controller.setSchedule(schedule);
             controller.setOnSave(() -> {
                 loadSchedules();
-                showAlert("Success", schedule == null ? "Schedule added successfully" : "Schedule updated successfully", 
-                         Alert.AlertType.INFORMATION);
+                CustomAlert.showSuccess("Success", schedule == null ? "Schedule added successfully" : "Schedule updated successfully");
             });
 
             Stage dialogStage = new Stage();
@@ -298,7 +315,7 @@ public class SchedulesController {
             
         } catch (IOException e) {
             System.err.println("Error showing schedule dialog: " + e.getMessage());
-            showAlert("Error", "Failed to show schedule dialog: " + e.getMessage(), Alert.AlertType.ERROR);
+            CustomAlert.showError("Error", "Failed to show schedule dialog: " + e.getMessage());
         }
     }
 
@@ -343,7 +360,7 @@ public class SchedulesController {
             ViewsFactory.showWindow("Login.fxml", "Login");
         } catch (IOException e) {
             System.err.println("Error during logout: " + e.getMessage());
-            showAlert("Logout Error", "Could not return to login page: " + e.getMessage(), Alert.AlertType.ERROR);
+            CustomAlert.showError("Logout Error", "Could not return to login page: " + e.getMessage());
         }
     }
 
@@ -360,7 +377,7 @@ public class SchedulesController {
             stage.setScene(scene);
         } catch (IOException e) {
             System.err.println("Error navigating to page: " + e.getMessage());
-            showAlert("Navigation Error", "Could not navigate to " + fxmlFile + ": " + e.getMessage(), Alert.AlertType.ERROR);
+            CustomAlert.showError("Navigation Error", "Could not navigate to " + fxmlFile + ": " + e.getMessage());
         }
     }
 

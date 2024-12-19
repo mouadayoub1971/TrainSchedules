@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane prefHeight="400.0" prefWidth="500.0" styleClass="dialog-container" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mouad.frontend.Controllers.Client.BookingDialogController">
+    <VBox spacing="20" AnchorPane.leftAnchor="20" AnchorPane.rightAnchor="20" AnchorPane.topAnchor="20" AnchorPane.bottomAnchor="20">
+        <Text styleClass="dialog-title" text="Book Your Train Ticket" />
+        
+        <GridPane vgap="15" hgap="10">
+            <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="100" />
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="200" />
+            </columnConstraints>
+
+            <!-- Schedule Details -->
+            <Label text="From:" GridPane.rowIndex="0" GridPane.columnIndex="0" />
+            <Label fx:id="fromLabel" styleClass="info-label" GridPane.rowIndex="0" GridPane.columnIndex="1" />
+            
+            <Label text="To:" GridPane.rowIndex="1" GridPane.columnIndex="0" />
+            <Label fx:id="toLabel" styleClass="info-label" GridPane.rowIndex="1" GridPane.columnIndex="1" />
+            
+            <Label text="Departure:" GridPane.rowIndex="2" GridPane.columnIndex="0" />
+            <Label fx:id="departureTimeLabel" styleClass="info-label" GridPane.rowIndex="2" GridPane.columnIndex="1" />
+            
+            <Label text="Arrival:" GridPane.rowIndex="3" GridPane.columnIndex="0" />
+            <Label fx:id="arrivalTimeLabel" styleClass="info-label" GridPane.rowIndex="3" GridPane.columnIndex="1" />
+            
+            <Label text="Cost per seat:" GridPane.rowIndex="4" GridPane.columnIndex="0" />
+            <Label fx:id="costLabel" styleClass="info-label" GridPane.rowIndex="4" GridPane.columnIndex="1" />
+
+            <!-- Booking Details -->
+            <Label text="Number of Seats:" GridPane.rowIndex="5" GridPane.columnIndex="0" />
+            <Spinner fx:id="seatsSpinner" min="1" max="10" initialValue="1" GridPane.rowIndex="5" GridPane.columnIndex="1" />
+
+            <Label text="Total Cost:" GridPane.rowIndex="6" GridPane.columnIndex="0" />
+            <Label fx:id="totalCostLabel" styleClass="total-cost-label" GridPane.rowIndex="6" GridPane.columnIndex="1" />
+        </GridPane>
+
+        <HBox spacing="10" alignment="CENTER_RIGHT">
+            <Button fx:id="cancelButton" text="Cancel" onAction="#onCancelClicked" styleClass="cancel-button" />
+            <Button fx:id="confirmButton" text="Confirm Booking" onAction="#onConfirmClicked" styleClass="confirm-button" defaultButton="true" />
+        </HBox>
+    </VBox>
+</AnchorPane>

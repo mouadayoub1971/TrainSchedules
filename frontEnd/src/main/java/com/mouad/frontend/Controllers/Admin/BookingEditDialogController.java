@@ -40,7 +40,7 @@ public class BookingEditDialogController {
             SpinnerValueFactory<Integer> valueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1, 100, 1);
             seatsSpinner.setValueFactory(valueFactory);
 
-            // Setup status options with correct enum values
+            // Setup status options to match backend enum
             statusComboBox.getItems().addAll("CONFIRMED", "CANCELED", "COMPLETED");
 
             // Load schedules
@@ -77,8 +77,7 @@ public class BookingEditDialogController {
     public void setBooking(JsonNode booking) {
         try {
             System.out.println("Received booking data: " + booking.toString());
-            System.out.println("status: ");
-
+            
             this.currentBooking = booking;
             
             // Set user email (read-only)
@@ -149,34 +148,64 @@ public class BookingEditDialogController {
                 return;
             }
 
-            // Create booking object for update
-            ObjectNode booking = objectMapper.createObjectNode();
-            booking.put("id", currentBooking.get("id").asInt());
-            booking.put("numberOfSeats", seatsSpinner.getValue());
-            
-            // Don't send status as backend will set it to CONFIRMED
-            
-            // Set user ID only
-            ObjectNode userNode = booking.putObject("user");
-            userNode.put("id", currentBooking.get("user").get("id").asInt());
-            
-            // Set schedule ID only
-            ObjectNode scheduleNode = booking.putObject("schedule");
-            scheduleNode.put("id", scheduleComboBox.getValue().get("id").asInt());
-            booking.put("status", statusComboBox.getValue());
+            // Check if only status is being updated
+            String newStatus = statusComboBox.getValue();
+            String currentStatus = currentBooking.get("status").asText();
+            boolean onlyStatusChanged = seatsSpinner.getValue() == currentBooking.get("numberOfSeats").asInt() &&
+                    scheduleComboBox.getValue().get("id").asInt() == currentBooking.get("schedule").get("id").asInt() &&
+                    !currentStatus.equals(newStatus);
 
-            System.out.println("Sending update request with data: " + booking.toString());
+            if (onlyStatusChanged) {
+                // Just update the status
+                bookingService.updateBookingStatus(currentBooking.get("id").asInt(), newStatus);
+                CustomAlert.showSuccess("Success", "Booking status updated successfully");
+            } else {
+                // Create booking object for full update
+                ObjectNode booking = objectMapper.createObjectNode();
+                booking.put("id", currentBooking.get("id").asInt());
+                booking.put("numberOfSeats", seatsSpinner.getValue());
+                booking.put("status", newStatus);
+                
+                // Set booking time from current booking
+                if (currentBooking.has("bookingTime")) {
+                    booking.put("bookingTime", currentBooking.get("bookingTime").asText());
+                }
+                
+                // Set user
+                ObjectNode userNode = booking.putObject("user");
+                userNode.put("id", currentBooking.get("user").get("id").asInt());
+                
+                // Set schedule with all required fields
+                JsonNode selectedSchedule = scheduleComboBox.getValue();
+                ObjectNode scheduleNode = booking.putObject("schedule");
+                scheduleNode.put("id", selectedSchedule.get("id").asInt());
+                scheduleNode.put("departure", selectedSchedule.get("departure").asText());
+                scheduleNode.put("destination", selectedSchedule.get("destination").asText());
+                scheduleNode.put("departureTime", selectedSchedule.get("departureTime").asText());
+                scheduleNode.put("arrivalTime", selectedSchedule.get("arrivalTime").asText());
+                scheduleNode.put("cost", selectedSchedule.get("cost").asDouble());
+                
+                // Add train information to schedule
+                JsonNode trainNode = selectedSchedule.get("train");
+                if (trainNode != null) {
+                    ObjectNode scheduleTrainNode = scheduleNode.putObject("train");
+                    scheduleTrainNode.put("id", trainNode.get("id").asInt());
+                    scheduleTrainNode.put("trainName", trainNode.get("trainName").asText());
+                }
 
-            // Update booking
-            bookingService.updateBooking(booking);
-            CustomAlert.showInformation("Success", "Booking updated successfully");
+                System.out.println("Sending update request with data: " + booking.toPrettyString());
+
+                // Update booking
+                bookingService.updateBooking(booking);
+                CustomAlert.showSuccess("Success", "Booking updated successfully");
+            }
 
             // Close the dialog
             closeDialog();
         } catch (Exception e) {
             System.err.println("Error updating booking: " + e.getMessage());
             e.printStackTrace();
-            CustomAlert.showInformation("Error", "Could not update booking: " + e.getMessage());
+            CustomAlert.showError("Error", "Could not update booking: " + e.getMessage());
         }
     }
 

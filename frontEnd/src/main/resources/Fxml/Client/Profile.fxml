@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
@@ -11,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox minHeight="750.0" minWidth="1250.0" style="-fx-background-color: #2e2f30; -fx-opacity: 1.0;" stylesheets="@../../Styles/GProfile.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mouad.frontend.Controllers.Client.ProfileController">
+<VBox minHeight="750.0" minWidth="1250.0" style="-fx-background-color: #2e2f30; -fx-opacity: 1.0;" stylesheets="@../../styles/Client/Profile.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mouad.frontend.Controllers.Client.ProfileController">
    <children>
       <HBox alignment="CENTER_LEFT" spacing="10" VBox.vgrow="ALWAYS">
          <children>
@@ -21,7 +25,7 @@
                      <children>
                         <VBox alignment="CENTER" prefHeight="600.0" prefWidth="50.0" spacing="32" style="-fx-background-color: linear-gradient(to right, #da9020 80%, #242526 95%);">
                            <children>
-                              <ImageView fx:id="homeIcon" onMouseClicked="#home" fitHeight="26.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="homeIcon" onMouseClicked="#onHomeClicked" fitHeight="26.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../images/homepage.png" />
                                  </image>
@@ -29,7 +33,7 @@
                                     <Insets left="20" />
                                  </VBox.margin>
                               </ImageView>
-                              <ImageView fx:id="searchIcon" onMouseClicked="#search" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="searchIcon" onMouseClicked="#onSearchClicked" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../images/trains.png" />
                                  </image>
@@ -37,7 +41,7 @@
                                     <Insets left="20" />
                                  </VBox.margin>
                               </ImageView>
-                              <ImageView fx:id="profileIcon" onMouseClicked="#profile" styleClass="menu-icon active" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="profileIcon" onMouseClicked="#onProfileClicked" styleClass="menu-icon active" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../images/user.png" />
                                  </image>
@@ -45,7 +49,7 @@
                                     <Insets left="20" />
                                  </VBox.margin>
                               </ImageView>
-                              <ImageView fx:id="bookingsIcon" onMouseClicked="#bookings" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="bookingsIcon" onMouseClicked="#onBookingsClicked" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../images/booking.png" />
                                  </image>
@@ -53,7 +57,7 @@
                                     <Insets left="20" />
                                  </VBox.margin>
                               </ImageView>
-                              <ImageView fx:id="logoutIcon" onMouseClicked="#logout" fitHeight="25.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                              <ImageView fx:id="logoutIcon" onMouseClicked="#onLogoutClicked" fitHeight="25.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
                                  <image>
                                     <Image url="@../../images/log-out.png" />
                                  </image>
@@ -68,7 +72,7 @@
                         </VBox>
                         <VBox alignment="CENTER" prefWidth="130" spacing="25" style="-fx-background-color: #242526;">
                            <children>
-                              <Label fx:id="homeLabel" onMouseClicked="#home" styleClass="menu-label, menu-home" text="Home">
+                              <Label fx:id="homeLabel" onMouseClicked="#onHomeClicked" styleClass="menu-label, menu-home" text="Home">
                                  <font>
                                     <Font name="System Bold" size="14.0" />
                                  </font>
@@ -76,7 +80,7 @@
                                     <Insets left="10" right="20" />
                                  </padding>
                               </Label>
-                              <Label fx:id="searchLabel" onMouseClicked="#search" styleClass="menu-label, menu-search" text="Search">
+                              <Label fx:id="searchLabel" onMouseClicked="#onSearchClicked" styleClass="menu-label, menu-search" text="Search">
                                  <font>
                                     <Font name="System Bold" size="14.0" />
                                  </font>
@@ -84,7 +88,7 @@
                                     <Insets left="10" right="20" />
                                  </padding>
                               </Label>
-                              <Label fx:id="profileLabel" onMouseClicked="#profile" styleClass="menu-label, menu-profile, active" text="Profile">
+                              <Label fx:id="profileLabel" onMouseClicked="#onProfileClicked" styleClass="menu-label, menu-profile, active" text="Profile">
                                  <font>
                                     <Font name="System Bold" size="14.0" />
                                  </font>
@@ -92,7 +96,7 @@
                                     <Insets left="10" right="20" />
                                  </padding>
                               </Label>
-                              <Label fx:id="bookingsLabel" onMouseClicked="#bookings" styleClass="menu-label, menu-bookings" text="Bookings">
+                              <Label fx:id="bookingsLabel" onMouseClicked="#onBookingsClicked" styleClass="menu-label, menu-bookings" text="Bookings">
                                  <font>
                                     <Font name="System Bold" size="14.0" />
                                  </font>
@@ -100,7 +104,7 @@
                                     <Insets left="10" right="20" />
                                  </padding>
                               </Label>
-                              <Label fx:id="logoutLabel" onMouseClicked="#logout" styleClass="menu-label, menu-logout" text="Logout">
+                              <Label fx:id="logoutLabel" onMouseClicked="#onLogoutClicked" styleClass="menu-label, menu-logout" text="Logout">
                                  <font>
                                     <Font name="System Bold" size="14.0" />
                                  </font>
@@ -115,7 +119,7 @@
                         </VBox>
                      </children>
                   </HBox>
-                  <VBox mouseTransparent="true" style="-fx-background-color: transparent;">
+                  <VBox alignment="TOP_LEFT" mouseTransparent="true" style="-fx-background-color: transparent;">
                      <children>
                         <ImageView fitHeight="124.0" fitWidth="122.0" preserveRatio="true">
                            <image>
@@ -132,29 +136,126 @@
                   </VBox>
                </children>
             </StackPane>
-            <VBox spacing="15" HBox.hgrow="ALWAYS">
+            <VBox spacing="20" HBox.hgrow="ALWAYS">
                <children>
                   <VBox alignment="CENTER_LEFT" style="-fx-background-color: #424344; -fx-background-radius: 10;" minHeight="60">
                      <padding>
                         <Insets left="20" right="20" top="10" bottom="10"/>
                      </padding>
                      <children>
-                        <Label text="My Profile" textFill="WHITE">
-                           <font>
-                              <Font name="System Bold" size="24.0"/>
-                           </font>
-                        </Label>
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                           <children>
+                              <Label text="Client" textFill="#da9020">
+                                 <font>
+                                    <Font size="24.0"/>
+                                 </font>
+                              </Label>
+                              <Label text=">" textFill="#808080">
+                                 <font>
+                                    <Font size="24.0"/>
+                                 </font>
+                                 <HBox.margin>
+                                    <Insets left="5" right="5"/>
+                                 </HBox.margin>
+                              </Label>
+                              <Label text="Profile" textFill="WHITE">
+                                 <font>
+                                    <Font name="System Bold" size="24.0"/>
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
                      </children>
                   </VBox>
-                  <!-- Content Section -->
-                  <VBox VBox.vgrow="ALWAYS" style="-fx-background-color: #3a3b3c; -fx-background-radius: 10;">
+                  
+                  <VBox alignment="CENTER_LEFT" style="-fx-background-color: #424344; -fx-background-radius: 10;" minHeight="120">
                      <padding>
-                        <Insets top="20" right="20" bottom="20" left="20"/>
+                        <Insets left="30.0" right="30.0" top="20.0" bottom="20.0" />
                      </padding>
+                     <children>
+                        <HBox alignment="CENTER_LEFT" spacing="20">
+                           <ImageView fitHeight="80" fitWidth="80" styleClass="profile-image">
+                              <image>
+                                 <Image url="@../../images/user.png" />
+                              </image>
+                           </ImageView>
+                           <VBox spacing="5">
+                              <Label fx:id="userNameLabel" styleClass="user-name-label" text="John Doe" />
+                              <Label fx:id="userEmailLabel" styleClass="user-email-label" text="john@example.com" />
+                              <Label fx:id="memberSinceLabel" styleClass="member-since-label" text="Member since: January 2024" />
+                           </VBox>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  
+                  <!-- Profile Edit Form -->
+                  <VBox style="-fx-background-color: #424344; -fx-background-radius: 10;" spacing="25">
+                     <padding>
+                        <Insets top="30" right="40" bottom="30" left="40"/>
+                     </padding>
+                     <children>
+                        <Label text="Edit Profile" styleClass="section-title"/>
+                        
+                        <HBox spacing="40">
+                           <!-- Left Section - Personal Information -->
+                           <VBox spacing="20" HBox.hgrow="ALWAYS">
+                              <Label text="Personal Information" styleClass="subsection-title"/>
+                              <Separator styleClass="custom-separator"/>
+                              
+                              <!-- First Name -->
+                              <VBox spacing="5">
+                                 <Label text="First Name:" styleClass="field-label"/>
+                                 <TextField fx:id="firstNameField" styleClass="profile-field"/>
+                              </VBox>
+                              
+                              <!-- Last Name -->
+                              <VBox spacing="5">
+                                 <Label text="Last Name:" styleClass="field-label"/>
+                                 <TextField fx:id="lastNameField" styleClass="profile-field"/>
+                              </VBox>
+                              
+                              <!-- Email -->
+                              <VBox spacing="5">
+                                 <Label text="Email:" styleClass="field-label"/>
+                                 <TextField fx:id="emailField" styleClass="profile-field"/>
+                              </VBox>
+                           </VBox>
+                           
+                           <!-- Right Section - Security -->
+                           <VBox spacing="20" HBox.hgrow="ALWAYS">
+                              <Label text="Security" styleClass="subsection-title"/>
+                              <Separator styleClass="custom-separator"/>
+                              
+                              <!-- Current Password -->
+                              <VBox spacing="5">
+                                 <Label text="Current Password:" styleClass="field-label"/>
+                                 <PasswordField fx:id="currentPasswordField" styleClass="profile-field"/>
+                              </VBox>
+                              
+                              <!-- New Password -->
+                              <VBox spacing="5">
+                                 <Label text="New Password:" styleClass="field-label"/>
+                                 <PasswordField fx:id="newPasswordField" styleClass="profile-field"/>
+                              </VBox>
+                              
+                              <!-- Confirm Password -->
+                              <VBox spacing="5">
+                                 <Label text="Confirm Password:" styleClass="field-label"/>
+                                 <PasswordField fx:id="confirmPasswordField" styleClass="profile-field"/>
+                              </VBox>
+                           </VBox>
+                        </HBox>
+                        
+                        <!-- Buttons -->
+                        <HBox alignment="CENTER_RIGHT" spacing="15">
+                           <Button fx:id="cancelButton" text="Cancel" onAction="#onCancelClicked" styleClass="cancel-button"/>
+                           <Button fx:id="saveButton" text="Save Changes" onAction="#onSaveClicked" styleClass="save-button"/>
+                        </HBox>
+                     </children>
                   </VBox>
                </children>
                <padding>
-                  <Insets top="20" right="20" bottom="20" left="20"/>
+                  <Insets left="30.0" right="30.0"/>
                </padding>
             </VBox>
          </children>

@@ -1,6 +1,5 @@
 package com.mouad.frontend.Controllers;
 
-import com.mouad.frontend.Controllers.Client.GClientController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -11,15 +10,10 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import de.jensd.fx.glyphs.fontawesome.FontAwesomeIconView;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.mouad.frontend.Services.AdminService;
-import com.mouad.frontend.Controllers.Client.ClientController;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
+import com.mouad.frontend.Services.UserService;
+import com.mouad.frontend.Models.User;
+import java.net.URL;
 
 public class LoginController {
     @FXML
@@ -35,11 +29,12 @@ public class LoginController {
     private FontAwesomeIconView closeIcon;
 
     private final AdminService adminService;
+    private final UserService userService;
 
     public LoginController() {
         this.adminService = AdminService.getInstance();
+        this.userService = UserService.getInstance();
     }
-
 
     @FXML
     void onLoginClick(ActionEvent event) {
@@ -52,69 +47,64 @@ public class LoginController {
         }
 
         try {
-            AdminService adminService = AdminService.getInstance();
+            // Try login and get response
             AdminService.LoginResponse loginResponse = adminService.login(email, password);
-            System.out.println("Login response: " + loginResponse.getMessage() + 
-                             ", admin=" + loginResponse.isAdmin() + 
-                             ", firstName=" + loginResponse.getFirstName());
-
-            if (loginResponse != null) {
-                if (loginResponse.getMessage().equals("Login successful")) {
-                    System.out.println("Login successful, loading dashboard...");
-                    
-                    // Clear error message
-                    errorLabel.setText("");
-                    
-                    // Get the stage from any control (e.g., emailField)
-                    Stage stage = (Stage) emailField.getScene().getWindow();
-
-                    if (loginResponse.isAdmin()) {
-                        // Load the admin dashboard
-                        String fxmlPath = "/Fxml/Admin/MainPage.fxml";
-                        System.out.println("Loading admin FXML: " + fxmlPath);
-                        
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-                        Parent root = loader.load();
-                        Scene scene = new Scene(root);
-                        
-                        stage.setTitle("Admin Dashboard - " + loginResponse.getFirstName());
-                        stage.setScene(scene);
-                    } else {
-                        // Load the client dashboard
-                        String fxmlPath = "/Fxml/Client/GMainPage.fxml";
-                        System.out.println("Loading client FXML: " + fxmlPath);
-                        
-                        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-                        Parent root = loader.load();
-                        
-                        // Get the client controller and set the user info
-                        GClientController clientController = loader.getController();
-                        String displayName = loginResponse.getEmail();
-                        clientController.setUserInfo(displayName, loginResponse.getEmail());
-                        
-                        Scene scene = new Scene(root);
-                        stage.setTitle("GMain Dashboard - " + loginResponse.getEmail());
-                        stage.setScene(scene);
-                    }
-                    stage.show();
-                } else {
-                    // Show error message from server
-                    errorLabel.setText(loginResponse.getMessage());
-                    System.err.println("Login failed: " + loginResponse.getMessage());
-                }
-            } else {
-                errorLabel.setText("Error connecting to server");
-                System.err.println("No response from server");
+            System.out.println("this is the login response " + loginResponse);
+            
+            if (loginResponse == null || !loginResponse.getMessage().equals("Login successful")) {
+                errorLabel.setText("Invalid email or password");
+                return;
             }
+
+            // At this point, login was successful
+            errorLabel.setText("");
+            Stage stage = (Stage) emailField.getScene().getWindow();
+            FXMLLoader loader;
+            Scene scene;
+            
+            if (loginResponse.isAdmin()) {
+                // Admin user - load admin dashboard
+                System.out.println("Loading admin dashboard for: " + loginResponse.getFirstName());
+                loader = new FXMLLoader(getClass().getResource("/Fxml/Admin/MainPage.fxml"));
+                scene = new Scene(loader.load());
+                stage.setTitle("Admin Dashboard - " + loginResponse.getFirstName());
+            } else {
+                // Regular user - set up user service and load client dashboard
+                System.out.println("Loading client dashboard for: " + loginResponse.getFirstName());
+                
+                // Set up user information in UserService
+                User user = new User();
+                user.setId(Long.valueOf(loginResponse.getUserId())); // Convert to Long
+                user.setEmail(loginResponse.getEmail());
+                user.setFirstName(loginResponse.getFirstName());
+                user.setLastName(loginResponse.getSecondName());
+                userService.setCurrentUser(user);
+                
+                // Load client dashboard
+                loader = new FXMLLoader(getClass().getResource("/Fxml/Client/MainPage.fxml"));
+                scene = new Scene(loader.load());
+                
+                // Add CSS for client dashboard
+                URL cssResource = getClass().getResource("/styles/Client/MainPage.css");
+                if (cssResource != null) {
+                    scene.getStylesheets().add(cssResource.toExternalForm());
+                }
+                
+                stage.setTitle("Train Schedules - " + user.getFirstName());
+            }
+            
+            stage.setScene(scene);
+            stage.show();
+            
         } catch (Exception e) {
-            errorLabel.setText("Error: " + e.getMessage());
-            System.err.println("Login error: " + e.getMessage());
+            System.err.println("Error during login: " + e.getMessage());
             e.printStackTrace();
+            errorLabel.setText("An error occurred during login");
         }
     }
 
     @FXML
-    public void onCloseClick() {
+    void onCloseClick() {
         Stage stage = (Stage) closeIcon.getScene().getWindow();
         stage.close();
     }

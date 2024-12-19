@@ -1,0 +1,84 @@
+.table-view .column-header {
+    -fx-background-color: transparent;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: transparent;
+}
+
+.table-view {
+    -fx-background-color: transparent;
+}
+
+/* Style for all cells in the table */
+.table-view .table-cell {
+    -fx-text-fill: white;
+    -fx-alignment: center-left;
+    -fx-padding: 5 10 5 10;
+}
+
+/* Style for specific columns if needed */
+.table-column {
+    -fx-text-fill: white;
+}
+
+/* Make sure text stays white even when cell is selected */
+.table-row-cell:selected .table-cell {
+    -fx-text-fill: white;
+}
+
+/* Style for table rows */
+.table-row-cell {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-table-cell-border-color: transparent;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: rgba(255, 255, 255, 0.05);
+}
+
+.table-row-cell:selected {
+    -fx-background-color: rgba(218, 144, 32, 0.3);
+}
+
+/* Remove default focus highlight */
+.table-view:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+/* Style for the scroll bars */
+.table-view .scroll-bar:horizontal,
+.table-view .scroll-bar:vertical {
+    -fx-background-color: transparent;
+}
+
+.table-view .scroll-bar:horizontal .thumb,
+.table-view .scroll-bar:vertical .thumb {
+    -fx-background-color: rgba(255, 255, 255, 0.2);
+    -fx-background-radius: 5em;
+}
+
+.table-view .scroll-bar:horizontal .track,
+.table-view .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 5em;
+}
+
+/* Style for the cancel button */
+.cancel-button {
+    -fx-background-color: #da9020;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+}
+
+.cancel-button:hover {
+    -fx-background-color: #c27d1c;
+}

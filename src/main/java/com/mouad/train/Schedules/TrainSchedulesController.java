@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/schedules")
@@ -100,6 +101,37 @@ public class TrainSchedulesController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(0);
         }
+    }
+
+    // Get all unique departure stations
+    @GetMapping("/departures")
+    public List<String> getAllDepartures() {
+        return trainSchedulesRepository.findAll().stream()
+                .map(TrainSchedules::getDeparture)
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    // Get all unique destination stations
+    @GetMapping("/destinations")
+    public List<String> getAllDestinations() {
+        return trainSchedulesRepository.findAll().stream()
+                .map(TrainSchedules::getDestination)
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    // Get destinations available for a given departure
+    @GetMapping("/departures/{departure}/destinations")
+    public List<String> getDestinationsForDeparture(@PathVariable String departure) {
+        return trainSchedulesRepository.findByDeparture(departure).stream()
+                .filter(TrainSchedules::isAvailable)  // Only get destinations with available schedules
+                .map(TrainSchedules::getDestination)
+                .distinct()
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     // Add a new schedule

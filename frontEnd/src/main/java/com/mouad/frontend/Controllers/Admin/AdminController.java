@@ -4,7 +4,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
@@ -16,6 +15,8 @@ import com.mouad.frontend.Views.ViewsFactory;
 import com.mouad.frontend.Services.CounterService;
 import java.io.IOException;
 import java.net.URL;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.mouad.frontend.Components.CustomAlert;
 
 public class AdminController {
     private final UserService userService;
@@ -135,7 +136,7 @@ public class AdminController {
         } catch (IOException e) {
             System.err.println("Error during logout: " + e.getMessage());
             e.printStackTrace();
-            showAlert("Logout Error", "Could not return to login page: " + e.getMessage());
+            CustomAlert.showError("Logout Error", "Could not return to login page: " + e.getMessage());
         }
     }
 
@@ -159,7 +160,7 @@ public class AdminController {
         } catch (IOException e) {
             System.err.println("Error navigating to " + fxmlFile + ": " + e.getMessage());
             e.printStackTrace();
-            showAlert("Navigation Error", "Could not load page: " + e.getMessage());
+            CustomAlert.showError("Navigation Error", "Could not load page: " + e.getMessage());
         }
     }
 
@@ -180,13 +181,5 @@ public class AdminController {
             System.err.println("Error updating dashboard stats: " + e.getMessage());
             e.printStackTrace();
         }
-    }
-
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 }

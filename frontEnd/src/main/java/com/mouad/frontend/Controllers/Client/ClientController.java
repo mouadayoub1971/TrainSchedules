@@ -1,409 +1,150 @@
 package com.mouad.frontend.Controllers.Client;
 
-import com.mouad.frontend.Controllers.TrainSchedule;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import com.mouad.frontend.Models.User;
+import com.mouad.frontend.Services.UserService;
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.scene.image.ImageView;
-import com.mouad.frontend.Services.UserService;
+import javafx.util.Duration;
 import com.mouad.frontend.Services.BookingService;
 import com.mouad.frontend.Views.ViewsFactory;
+import com.fasterxml.jackson.databind.JsonNode;
 import java.io.IOException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.mouad.frontend.Controllers.TrainSchedule;
-import com.mouad.frontend.Controllers.backend.BackendService;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
-
 import java.net.URL;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.ResourceBundle;
+import com.mouad.frontend.Components.CustomAlert;
 
-public class ClientController {
+public class ClientController implements javafx.fxml.Initializable {
     @FXML
-    public Button searchSchedulesButton;
+    private Label welcomeLabel;
     @FXML
-    public TextField NumberOfSeatsAdminText;
+    private Label totalBookingsLabel;
     @FXML
-    public TextField DestinationAdminText;
+    private Label activeBookingsLabel;
     @FXML
-    public TextField ArrivalAdminText;
+    private ImageView homeIcon;
     @FXML
-    public DatePicker Date;
+    private ImageView searchIcon;
+    @FXML
+    private ImageView profileIcon;
+    @FXML
+    private ImageView bookingsIcon;
+    @FXML
+    private ImageView logoutIcon;
+    @FXML
+    private Label homeLabel;
+    @FXML
+    private Label searchLabel;
+    @FXML
+    private Label profileLabel;
+    @FXML
+    private Label bookingsLabel;
+    @FXML
+    private Label logoutLabel;
+    @FXML
+    private VBox menuVBox;
 
-    @FXML
-    public ImageView logoImageView;
-
-    @FXML
-    public TableView<TrainSchedule> schedulesTableView;
-    @FXML
-    public TableColumn<TrainSchedule, String> trainNameColumn;
-    @FXML
-    public TableColumn<TrainSchedule, String> departureColumn;
-    @FXML
-    public TableColumn<TrainSchedule, String> destinationColumn;
-    @FXML
-    public TableColumn<TrainSchedule, String> departureTimeColumn;
-    @FXML
-    public TableColumn<TrainSchedule, String> arrivalTimeColumn;
-    @FXML
-    public TableColumn<TrainSchedule, Double> costColumn;
-    @FXML
-    public TableColumn<TrainSchedule, Void> actionColumn;
-
-    private ObservableList<TrainSchedule> schedulesList = FXCollections.observableArrayList();
     private final UserService userService;
     private final BookingService bookingService;
-    private String firstName;
-    private String email;
-    private Integer id;
-
-    @FXML private Label welcomeLabel;
-    @FXML private VBox contentArea;
-    
-    // Menu icons
-    @FXML private ImageView homeIcon;
-    @FXML private ImageView bookingsIcon;
-    @FXML private ImageView logoutIcon;
-    
-    // Menu labels
-    @FXML private Label homeLabel;
-    @FXML private Label bookingsLabel;
-    @FXML private Label logoutLabel;
 
     public ClientController() {
         this.userService = UserService.getInstance();
         this.bookingService = BookingService.getInstance();
     }
 
-    @FXML
-    public void initialize() {
-        System.out.println("the name of the currrent useremail  " + firstName);
-        // Initially hide the table
-        schedulesTableView.setVisible(false);
-
-        // Set up columns
-        trainNameColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getTrain().getTrainName()));
-        departureColumn.setCellValueFactory(new PropertyValueFactory<>("departure"));
-        destinationColumn.setCellValueFactory(new PropertyValueFactory<>("destination"));
-        departureTimeColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getDepartureTime().toString()));
-        arrivalTimeColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getArrivalTime().toString()));
-        costColumn.setCellValueFactory(new PropertyValueFactory<>("cost"));
-
-        // Setup action column with booking buttons
-        actionColumn.setCellFactory(param -> new TableCell<>() {
-            private final Button bookButton = new Button("Book");
-
-            {
-                bookButton.setOnAction(event -> {
-                    TrainSchedule schedule = getTableView().getItems().get(getIndex());
-                    bookSchedule(schedule);
-                });
-            }
-
-            @Override
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setGraphic(null);
-                } else {
-                    setGraphic(bookButton);
-                }
-            }
-        });
-
-        // Set the table's items
-        schedulesTableView.setItems(schedulesList);
-
-        System.out.println("Client dashboard initialized");
-        if (firstName != null) {
-            welcomeLabel.setText("Welcome,! " + firstName + "!!");
-        }
-        
-        // Set initial active state
-        setActiveMenu("home");
-    }
-    @FXML
-    public void searchSchedules(ActionEvent actionEvent) {
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
         try {
-            // Get user input values
-            String numberOfSeats = NumberOfSeatsAdminText.getText();
-            String destination = DestinationAdminText.getText();
-            String arrival = ArrivalAdminText.getText();
-            LocalDate date = Date.getValue();
+            System.out.println("Initializing ClientController...");
+            
+            // Set up click handlers for icons
+            homeIcon.setOnMouseClicked(event -> onHomeClicked());
+            searchIcon.setOnMouseClicked(event -> onSearchClicked());
+            profileIcon.setOnMouseClicked(event -> onProfileClicked());
+            bookingsIcon.setOnMouseClicked(event -> onBookingsClicked());
+            logoutIcon.setOnMouseClicked(event -> onLogoutClicked());
+            
+            // Set up click handlers for labels
+            homeLabel.setOnMouseClicked(event -> onHomeClicked());
+            searchLabel.setOnMouseClicked(event -> onSearchClicked());
+            profileLabel.setOnMouseClicked(event -> onProfileClicked());
+            bookingsLabel.setOnMouseClicked(event -> onBookingsClicked());
+            logoutLabel.setOnMouseClicked(event -> onLogoutClicked());
 
-            // Validate inputs
-            if (numberOfSeats.isEmpty() || destination.isEmpty() || arrival.isEmpty() || date == null) {
-                showAlert(Alert.AlertType.WARNING, "Incomplete Information", "Please fill in all fields.");
-                return;
-            }
-
-            // Log input for debugging
-            System.out.println("Inputs: " +
-                    "\nNumber of Seats: " + numberOfSeats +
-                    "\nDestination: " + destination +
-                    "\nArrival: " + arrival +
-                    "\nDate: " + date);
-
-            // Fetch schedules from the backend
-            String jsonResponse = BackendService.fetchData("/schedules");
-            System.out.println("The response from the backend: " + jsonResponse);
-
-            // Deserialize JSON response
-            ObjectMapper objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule());
-            objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
-            List<TrainSchedule> schedules = objectMapper.readValue(jsonResponse, new TypeReference<List<TrainSchedule>>() {});
-
-            // Filter schedules based on user input
-            List<TrainSchedule> filteredSchedules = schedules.stream()
-                    .filter(schedule -> schedule.getDestination().equalsIgnoreCase(destination))
-                    .filter(schedule -> schedule.getDeparture().equalsIgnoreCase(arrival))
-                    .filter(schedule -> schedule.getDepartureTime().toLocalDate().equals(date))
-                    .toList();
-
-            // Clear previous results and add new filtered schedules
-            schedulesList.clear();
-            schedulesList.addAll(filteredSchedules);
-
-            // Check if any schedules match
-            if (filteredSchedules.isEmpty()) {
-                // No matching schedules
-                schedulesTableView.setVisible(false);
-                showAlert(Alert.AlertType.INFORMATION, "No Schedules Found", "No schedules match your criteria.");
+            // Set user information
+            User currentUser = userService.getCurrentUser();
+            System.out.println("Current user: " + (currentUser != null ? 
+                currentUser.getFirstName() + " " + currentUser.getLastName() : "null"));
+                
+            if (currentUser != null && welcomeLabel != null) {
+                String fullName = currentUser.getFirstName() + " " + currentUser.getLastName();
+                System.out.println("Setting welcome label to: " + fullName);
+                welcomeLabel.setText(fullName);
             } else {
-                // Make the table visible
-                schedulesTableView.setVisible(true);
+                System.err.println("Warning: currentUser or welcomeLabel is null");
+                if (currentUser == null) System.err.println("currentUser is null");
+                if (welcomeLabel == null) System.err.println("welcomeLabel is null");
             }
+
+            // Initialize booking counters
+            updateBookingCounters();
+
+            // Set up auto-refresh for booking counters (every 30 seconds)
+            Timeline bookingsUpdateTimeline = new Timeline(
+                new KeyFrame(Duration.seconds(30), event -> updateBookingCounters())
+            );
+            bookingsUpdateTimeline.setCycleCount(Timeline.INDEFINITE);
+            bookingsUpdateTimeline.play();
+
         } catch (Exception e) {
+            System.err.println("Error in initialize: " + e.getMessage());
             e.printStackTrace();
-            schedulesTableView.setVisible(false);
-            showAlert(Alert.AlertType.ERROR, "Error", e.getMessage());
+            CustomAlert.showError("Initialization Error", "Failed to initialize: " + e.getMessage());
         }
-    }
-
-    private void bookSchedule(TrainSchedule schedule) {
-        try {
-            Integer matchedUserId = null;
-            // Validate number of seats
-            int numberOfSeats = Integer.parseInt(NumberOfSeatsAdminText.getText());
-
-            if (numberOfSeats <= 0) {
-                showAlert(Alert.AlertType.ERROR, "Invalid Seats", "Number of seats must be greater than 0.");
-                return;
-            }
-
-            // Prepare booking payload
-            Map<String, Object> bookingPayload = new HashMap<>();
-
-            // User object
-            // Jarmouni
-            try {
-                String jsonResponse = BackendService.fetchData("/users");
-                ObjectMapper objectMapper = new ObjectMapper();
-
-// Parse JSON directly as List of Maps
-                List<Map<String, Object>> users = objectMapper.readValue(jsonResponse, new TypeReference<List<Map<String, Object>>>(){});
-
-// Extract ID where email matches firstName
-                 matchedUserId = users.stream()
-                        .filter(user ->
-                                user.get("email") != null &&
-                                        user.get("email").equals(firstName)
-                        )
-                        .map(user -> (Integer) user.get("id"))
-                        .findFirst()
-                        .orElse(null);
-                System.out.println("the user id is where i fetched is " + matchedUserId);
-
-            } catch (Exception e){
-                System.out.println(e.toString());
-            }
-
-            Map<String, Object> userMap = new HashMap<>();
-            userMap.put("id", matchedUserId); // Hardcoded user ID
-            bookingPayload.put("user", userMap);
-
-            // Schedule object
-
-            Map<String, Object> scheduleMap = new HashMap<>();
-            scheduleMap.put("id", schedule.getId());
-            bookingPayload.put("schedule", scheduleMap);
-
-            // Additional booking details
-            bookingPayload.put("numberOfSeats", numberOfSeats);
-            bookingPayload.put("bookingTime", LocalDateTime.now().toString());
-            bookingPayload.put("status", "CONFIRMED");
-
-            // Send booking to backend
-            try {
-                String response = BackendService.postData("/bookings", bookingPayload);
-
-                // Process successful booking
-                showAlert(Alert.AlertType.INFORMATION, "Booking Successful",
-                        "You've booked " + numberOfSeats + " seats on " +
-                                schedule.getTrain().getTrainName() +
-                                " from " + schedule.getDeparture() +
-                                " to " + schedule.getDestination());
-            } catch (Exception e) {
-                // Handle booking error
-                showAlert(Alert.AlertType.ERROR, "Booking Failed",
-                        "Unable to complete booking: " + e.getMessage());
-                e.printStackTrace();
-            }
-        } catch (NumberFormatException e) {
-            showAlert(Alert.AlertType.ERROR, "Invalid Input", "Please enter a valid number of seats.");
-        }
-    }
-
-    @FXML
-    public void GoToAdminMenu(ActionEvent actionEvent) {
-        // Implementation for going back to admin menu
-    }
-
-    private void showAlert(Alert.AlertType alertType, String title, String message) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setContentText(message);
-        alert.showAndWait();
     }
 
     @FXML
     private void onHomeClicked() {
-        System.out.println("Home clicked");
-        setActiveMenu("home");
-        System.out.println("View home clicked");
-        try {
-            System.out.println("Attempting to navigate to: " + "/Fxml/Client/Client.fxml");
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/Client.fxml"));
-            Parent root = loader.load();
-            ClientController reservation = loader.getController();
-            System.out.println("befor the reservation setUser info "+ firstName + "email" + email);
-
-
-            reservation.setUserInfo(email, email);
-            System.out.println("after the reservation " + reservation.firstName + " the email " + reservation.email);
-            if (loader.getLocation() == null) {
-                throw new IOException("Could not find FXML file: " + "/Fxml/Client/Client.fxml");
-            }
-            Stage stage = (Stage) homeIcon.getScene().getWindow();
-            System.out.println("the loader is " + loader.toString());
-            System.out.println("the loader is " + loader.getController());
-
-            stage.setTitle("Reservation Dashboard -___ " + firstName+ " " + email);
-            Scene scene = new Scene(root);
-
-            stage.setScene(scene);
-        } catch (IOException e) {
-            System.err.println("Error navigating to " + "/Fxml/Client/Client.fxml"+ ": " + e.getMessage());
-            e.printStackTrace();
-            showAlert("Navigation Error", "Could not load page: " + e.getMessage());
-        }
+        navigateToPage("Client/MainPage.fxml");
     }
 
     @FXML
-    private void onViewBookings() {
-        System.out.println("View bookings clicked");
-        setActiveMenu("bookings");
-        try {
-            System.out.println("Attempting to navigate to: " + "/Fxml/Client/ViewReservation.fxml");
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/Fxml/Client/ViewReservation.fxml"));
-            Parent root = loader.load();
-            ViewReservation reservation = loader.getController();
-            System.out.println("befor the reservation setUser info "+ firstName + "email" + email);
-
-
-            reservation.setUserInfo(firstName, email);
-            System.out.println("after the reservation " + reservation.FirstName() + " the email " + reservation.Email());
-            if (loader.getLocation() == null) {
-                throw new IOException("Could not find FXML file: " + "/Fxml/Client/ViewReservation.fxml");
-            }
-            Stage stage = (Stage) homeIcon.getScene().getWindow();
-            System.out.println("the loader is " + loader.toString());
-            System.out.println("the loader is " + loader.getController());
-
-            stage.setTitle("Reservation Dashboard -___ " + firstName+ " " + email);
-            Scene scene = new Scene(root);
-
-            stage.setScene(scene);
-        } catch (IOException e) {
-            System.err.println("Error navigating to " + "/Fxml/Client/ViewReservation.fxml"+ ": " + e.getMessage());
-            e.printStackTrace();
-            showAlert("Navigation Error", "Could not load page: " + e.getMessage());
-        }
-//        navigateToPage("/Fxml/Client/ViewReservation.fxml");
-    }
-
-
-    private void navigateToPage(String fxmlFile) {
-        try {
-            System.out.println("Attempting to navigate to: " + fxmlFile);
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
-            Parent root = loader.load();
-            ViewReservation reservation = loader.getController();
-            System.out.println("befor the reservation setUser info "+ firstName + "email" + email);
-
-
-            reservation.setUserInfo(firstName, email);
-            System.out.println("after the reservation " + reservation.FirstName() + " the email " + reservation.Email());
-            if (loader.getLocation() == null) {
-                throw new IOException("Could not find FXML file: " + fxmlFile);
-            }
-            Stage stage = (Stage) homeIcon.getScene().getWindow();
-            System.out.println("the loader is " + loader.toString());
-            System.out.println("the loader is " + loader.getController());
-
-            stage.setTitle("Reservation Dashboard -___ " + firstName+ " " + email);
-            Scene scene = new Scene(root);
-
-            stage.setScene(scene);
-        } catch (IOException e) {
-            System.err.println("Error navigating to " + fxmlFile + ": " + e.getMessage());
-            e.printStackTrace();
-            showAlert("Navigation Error", "Could not load page: " + e.getMessage());
-        }
-    }
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
+    private void onSearchClicked() {
+        navigateToPage("Client/Search.fxml");
     }
 
     @FXML
-    private void onLogout() {
+    private void onProfileClicked() {
+        navigateToPage("Client/Profile.fxml");
+    }
+
+    @FXML
+    private void onBookingsClicked() {
+        navigateToPage("Client/Bookings.fxml");
+    }
+
+    @FXML
+    private void onLogoutClicked() {
         try {
-            System.out.println("Logout clicked");
+            userService.logout();
             // Close current window
-            Stage currentStage = (Stage) welcomeLabel.getScene().getWindow();
+            Stage currentStage = (Stage) logoutIcon.getScene().getWindow();
             currentStage.close();
             
             // Show login window
@@ -411,38 +152,108 @@ public class ClientController {
         } catch (IOException e) {
             System.err.println("Error during logout: " + e.getMessage());
             e.printStackTrace();
+            CustomAlert.showError("Logout Error", "Could not return to login page: " + e.getMessage());
         }
     }
 
-    public void setUserInfo(String firstName, String email) {
-        System.out.println("Setting user info - firstName: " + firstName + ", email: " + email );
-        this.firstName = firstName;
-        this.email = email;
-        if (welcomeLabel != null) {
-            welcomeLabel.setText("Welcome, " + firstName + "!!");
+    private void navigateToPage(String fxmlFile) {
+        try {
+            System.out.println("Attempting to navigate to: " + fxmlFile);
+            Stage stage = (Stage) homeIcon.getScene().getWindow();
+            
+            // Debug the FXML resource location
+            URL fxmlResource = getClass().getResource("/Fxml/" + fxmlFile);
+            System.out.println("FXML Resource URL: " + fxmlResource);
+            
+            FXMLLoader loader = new FXMLLoader(fxmlResource);
+            if (loader.getLocation() == null) {
+                throw new IOException("Could not find FXML file: /Fxml/" + fxmlFile);
+            }
+            
+            try {
+                Parent root = loader.load();
+                Scene scene = new Scene(root);
+                
+                // Get the CSS file name from the FXML file name
+                String cssFileName = fxmlFile.substring(fxmlFile.lastIndexOf('/') + 1).replace(".fxml", ".css");
+                URL cssResource = getClass().getResource("/styles/Client/" + cssFileName);
+                System.out.println("CSS Resource URL: " + cssResource);
+                
+                if (cssResource != null) {
+                    scene.getStylesheets().add(cssResource.toExternalForm());
+                    System.out.println("Successfully loaded CSS from: /styles/Client/" + cssFileName);
+                } else {
+                    System.err.println("Warning: Could not load CSS file from: /styles/Client/" + cssFileName);
+                }
+                
+                stage.setScene(scene);
+            } catch (IOException e) {
+                System.err.println("Error loading FXML content: " + e.getMessage());
+                e.printStackTrace();
+                throw e;
+            }
+        } catch (IOException e) {
+            System.err.println("Error navigating to " + fxmlFile + ": " + e.getMessage());
+            System.err.println("Stack trace:");
+            e.printStackTrace();
+            CustomAlert.showError("Navigation Error", "Could not load page: " + e.getMessage() + "\nCheck console for details.");
+        }
+    }
+    
+    private void updateBookingCounters() {
+        try {
+            // Get current values
+            int currentTotal = totalBookingsLabel.getText().isEmpty() ? 0 : Integer.parseInt(totalBookingsLabel.getText());
+            int currentActive = activeBookingsLabel.getText().isEmpty() ? 0 : Integer.parseInt(activeBookingsLabel.getText());
+
+            // Get new values
+            int newTotal = userService.getTotalBookings();
+            int newActive = userService.getActiveBookings();
+
+            // Animate total bookings counter
+            if (currentTotal != newTotal) {
+                animateCounter(totalBookingsLabel, currentTotal, newTotal);
+            }
+
+            // Animate active bookings counter
+            if (currentActive != newActive) {
+                animateCounter(activeBookingsLabel, currentActive, newActive);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            CustomAlert.showError("Error", "Failed to update booking counters: " + e.getMessage());
         }
     }
 
-    private void setActiveMenu(String menu) {
-        // Remove active class from all menu items
-        homeIcon.getStyleClass().remove("active");
-        bookingsIcon.getStyleClass().remove("active");
-        homeLabel.getStyleClass().remove("active");
-        bookingsLabel.getStyleClass().remove("active");
+    private void animateCounter(Label label, int startValue, int endValue) {
+        Duration duration = Duration.seconds(1);
+        SimpleIntegerProperty intProperty = new SimpleIntegerProperty(startValue);
+        
+        intProperty.addListener((observable, oldValue, newValue) -> 
+            Platform.runLater(() -> label.setText(String.valueOf(newValue.intValue())))
+        );
 
-        // Add active class to selected menu
-        switch (menu) {
-            case "home":
-                homeIcon.getStyleClass().add("active");
-                homeLabel.getStyleClass().add("active");
-                break;
-            case "bookings":
-                bookingsIcon.getStyleClass().add("active");
-                bookingsLabel.getStyleClass().add("active");
-                break;
-        }
+        Timeline timeline = new Timeline(
+            new KeyFrame(duration,
+                new KeyValue(intProperty, endValue, Interpolator.EASE_BOTH)
+            )
+        );
+        
+        timeline.play();
     }
 
-    public void home(MouseEvent mouseEvent) {
+    private void loadBookingStats() {
+        try {
+            // Get booking statistics from service
+            int totalBookings = userService.getUserTotalBookings();
+            int activeBookings = userService.getUserActiveBookings();
+
+            // Animate the counters
+            animateCounter(totalBookingsLabel, 0, totalBookings);
+            animateCounter(activeBookingsLabel, 0, activeBookings);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

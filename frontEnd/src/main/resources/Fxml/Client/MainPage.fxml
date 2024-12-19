@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox minHeight="750.0" minWidth="1250.0" style="-fx-background-color: #2e2f30; -fx-opacity: 1.0;" stylesheets="@../../styles/Client/MainPage.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.mouad.frontend.Controllers.Client.ClientController">
+   <children>
+      <HBox alignment="CENTER_LEFT" spacing="10" VBox.vgrow="ALWAYS">
+         <children>
+            <StackPane>
+               <children>
+                  <HBox>
+                     <children>
+                        <VBox fx:id="menuVBox" alignment="CENTER" prefHeight="600.0" prefWidth="50.0" spacing="32" style="-fx-background-color: linear-gradient(to right, #da9020 80%, #242526 95%);">
+                           <children>
+                              <ImageView fx:id="homeIcon" onMouseClicked="#onHomeClicked" styleClass="menu-icon,active" fitHeight="26.0" fitWidth="24.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../images/homepage.png" />
+                                 </image>
+                                 <VBox.margin>
+                                    <Insets left="20" />
+                                 </VBox.margin>
+                              </ImageView>
+                              <ImageView fx:id="searchIcon" onMouseClicked="#onSearchClicked" styleClass="menu-icon" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../images/trains.png" />
+                                 </image>
+                                 <VBox.margin>
+                                    <Insets left="20" />
+                                 </VBox.margin>
+                              </ImageView>
+                              <ImageView fx:id="profileIcon" onMouseClicked="#onProfileClicked" styleClass="menu-icon" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../images/user.png" />
+                                 </image>
+                                 <VBox.margin>
+                                    <Insets left="20" />
+                                 </VBox.margin>
+                              </ImageView>
+                              <ImageView fx:id="bookingsIcon" onMouseClicked="#onBookingsClicked" styleClass="menu-icon" fitHeight="25.0" fitWidth="25.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../images/booking.png" />
+                                 </image>
+                                 <VBox.margin>
+                                    <Insets left="20" />
+                                 </VBox.margin>
+                              </ImageView>
+                              <ImageView fx:id="logoutIcon" onMouseClicked="#onLogoutClicked" styleClass="menu-icon" fitHeight="25.0" fitWidth="20.0" pickOnBounds="true" preserveRatio="true">
+                                 <image>
+                                    <Image url="@../../images/log-out.png" />
+                                 </image>
+                                 <VBox.margin>
+                                    <Insets left="20" />
+                                 </VBox.margin>
+                              </ImageView>
+                           </children>
+                           <padding>
+                              <Insets bottom="30.0" right="20.0" top="30.0" />
+                           </padding>
+                        </VBox>
+                        <VBox alignment="CENTER" prefWidth="130" spacing="25" style="-fx-background-color: #242526;">
+                           <children>
+                              <Label fx:id="homeLabel" onMouseClicked="#onHomeClicked" styleClass="menu-label,menu-home,active" text="Home">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets left="10" right="20" />
+                                 </padding>
+                              </Label>
+                              <Label fx:id="searchLabel" onMouseClicked="#onSearchClicked" styleClass="menu-label,menu-search" text="Search">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets left="10" right="20" />
+                                 </padding>
+                              </Label>
+                              <Label fx:id="profileLabel" onMouseClicked="#onProfileClicked" styleClass="menu-label,menu-profile" text="Profile">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets left="10" right="20" />
+                                 </padding>
+                              </Label>
+                              <Label fx:id="bookingsLabel" onMouseClicked="#onBookingsClicked" styleClass="menu-label,menu-bookings" text="Bookings">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets left="10" right="20" />
+                                 </padding>
+                              </Label>
+                              <Label fx:id="logoutLabel" onMouseClicked="#onLogoutClicked" styleClass="menu-label,menu-logout" text="Logout">
+                                 <font>
+                                    <Font name="System Bold" size="14.0" />
+                                 </font>
+                                 <padding>
+                                    <Insets left="10" right="20" />
+                                 </padding>
+                              </Label>
+                           </children>
+                           <padding>
+                              <Insets bottom="30" top="30" />
+                           </padding>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <VBox alignment="TOP_LEFT" mouseTransparent="true" style="-fx-background-color: transparent;">
+                     <children>
+                        <ImageView fitHeight="124.0" fitWidth="122.0" preserveRatio="true">
+                           <image>
+                              <Image url="@../../images/TrainMaster.png" />
+                           </image>
+                           <VBox.margin>
+                              <Insets left="65.0" top="20.0" />
+                           </VBox.margin>
+                        </ImageView>
+                     </children>
+                     <StackPane.margin>
+                        <Insets />
+                     </StackPane.margin>
+                  </VBox>
+               </children>
+            </StackPane>
+            <VBox spacing="15" HBox.hgrow="ALWAYS">
+               <children>
+                  <VBox alignment="CENTER_LEFT" style="-fx-background-color: #424344; -fx-background-radius: 10;" minHeight="60">
+                     <padding>
+                        <Insets left="20" right="20" top="10" bottom="10"/>
+                     </padding>
+                     <HBox alignment="CENTER_LEFT" spacing="10">
+                        <children>
+                           <Label text="Client" textFill="#da9020">
+                              <font>
+                                 <Font name="System Bold" size="24.0"/>
+                              </font>
+                           </Label>
+                           <Label text=">" textFill="#808080">
+                              <font>
+                                 <Font name="System Bold" size="24.0"/>
+                              </font>
+                           </Label>
+                           <Label text="Dashboard" textFill="WHITE">
+                              <font>
+                                 <Font name="System Bold" size="24.0"/>
+                              </font>
+                           </Label>
+                        </children>
+                     </HBox>
+                  </VBox>
+                  <VBox VBox.vgrow="ALWAYS" style="-fx-background-color: #3a3b3c; -fx-background-radius: 10;">
+                     <padding>
+                        <Insets top="20" right="20" bottom="20" left="20"/>
+                     </padding>
+                     <children>
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                           <children>
+                              <Label text="Welcome back," textFill="WHITE">
+                                 <font>
+                                    <Font size="24.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="welcomeLabel" text="User" textFill="#da9020">
+                                 <font>
+                                    <Font name="System Bold" size="24.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                        </HBox>
+                        
+                        <!-- Statistics Section -->
+                        <HBox spacing="20" alignment="CENTER_LEFT">
+                           <VBox.margin>
+                              <Insets top="20" bottom="20"/>
+                           </VBox.margin>
+                           <children>
+                              <VBox styleClass="stat-box" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <Label styleClass="stat-label" text="Total Bookings" />
+                                    <Label fx:id="totalBookingsLabel" styleClass="stat-value" text="0" />
+                                 </children>
+                              </VBox>
+                              <VBox styleClass="stat-box" HBox.hgrow="ALWAYS">
+                                 <children>
+                                    <Label styleClass="stat-label" text="Active Bookings" />
+                                    <Label fx:id="activeBookingsLabel" styleClass="stat-value" text="0" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                        
+                        <GridPane hgap="20" vgap="20" alignment="CENTER">
+                           <columnConstraints>
+                              <ColumnConstraints percentWidth="50"/>
+                              <ColumnConstraints percentWidth="50"/>
+                           </columnConstraints>
+                           <rowConstraints>
+                              <RowConstraints vgrow="SOMETIMES"/>
+                              <RowConstraints vgrow="SOMETIMES"/>
+                           </rowConstraints>
+                           
+                           <!-- Search Card -->
+                           <VBox onMouseClicked="#onSearchClicked" styleClass="action-card" style="-fx-background-color: #424344; -fx-background-radius: 10; -fx-cursor: hand;">
+                              <padding>
+                                 <Insets top="30" right="40" bottom="30" left="40"/>
+                              </padding>
+                              <children>
+                                 <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                       <Image url="@../../images/trains.png"/>
+                                    </image>
+                                 </ImageView>
+                                 <Label text="Search Trains" styleClass="action-card-title">
+                                    <font>
+                                       <Font name="System Bold" size="22.0"/>
+                                    </font>
+                                    <VBox.margin>
+                                       <Insets top="20"/>
+                                    </VBox.margin>
+                                 </Label>
+                                 <Label text="Find and book your next journey" textFill="#808080">
+                                    <font>
+                                       <Font size="16.0"/>
+                                    </font>
+                                    <VBox.margin>
+                                       <Insets top="10"/>
+                                    </VBox.margin>
+                                 </Label>
+                              </children>
+                           </VBox>
+
+                           <!-- My Bookings Card -->
+                           <VBox onMouseClicked="#onBookingsClicked" styleClass="action-card" style="-fx-background-color: #424344; -fx-background-radius: 10; -fx-cursor: hand;" GridPane.columnIndex="1">
+                              <padding>
+                                 <Insets top="30" right="40" bottom="30" left="40"/>
+                              </padding>
+                              <children>
+                                 <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                       <Image url="@../../images/booking.png"/>
+                                    </image>
+                                 </ImageView>
+                                 <Label text="My Bookings" styleClass="action-card-title">
+                                    <font>
+                                       <Font name="System Bold" size="22.0"/>
+                                    </font>
+                                    <VBox.margin>
+                                       <Insets top="20"/>
+                                    </VBox.margin>
+                                 </Label>
+                                 <Label text="View and manage your bookings" textFill="#808080">
+                                    <font>
+                                       <Font size="16.0"/>
+                                    </font>
+                                    <VBox.margin>
+                                       <Insets top="10"/>
+                                    </VBox.margin>
+                                 </Label>
+                              </children>
+                           </VBox>
+
+                           <!-- Profile Card (centered in second row) -->
+                           <VBox onMouseClicked="#onProfileClicked" styleClass="action-card" 
+                                 style="-fx-background-color: #424344; -fx-background-radius: 10; -fx-cursor: hand; -fx-alignment: CENTER;" 
+                                 GridPane.rowIndex="1" GridPane.columnSpan="2" GridPane.halignment="CENTER">
+                              <padding>
+                                 <Insets top="30" right="40" bottom="30" left="40"/>
+                              </padding>
+                              <children>
+                                 <ImageView fitHeight="50.0" fitWidth="50.0" pickOnBounds="true" preserveRatio="true">
+                                    <image>
+                                       <Image url="@../../images/user.png"/>
+                                    </image>
+                                    <VBox.margin>
+                                       <Insets bottom="20"/>
+                                    </VBox.margin>
+                                 </ImageView>
+                                 <Label text="My Profile" styleClass="action-card-title" alignment="CENTER">
+                                    <font>
+                                       <Font name="System Bold" size="22.0"/>
+                                    </font>
+                                    <VBox.margin>
+                                       <Insets bottom="10"/>
+                                    </VBox.margin>
+                                 </Label>
+                                 <Label text="View and update your profile" textFill="#808080" alignment="CENTER">
+                                    <font>
+                                       <Font size="16.0"/>
+                                    </font>
+                                 </Label>
+                              </children>
+                              <GridPane.margin>
+                                 <Insets top="20"/>
+                              </GridPane.margin>
+                           </VBox>
+                           
+                           <VBox.margin>
+                              <Insets top="30" bottom="30"/>
+                           </VBox.margin>
+                        </GridPane>
+                     </children>
+                  </VBox>
+               </children>
+               <padding>
+                  <Insets top="20" right="20" bottom="20" left="20"/>
+               </padding>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</VBox>

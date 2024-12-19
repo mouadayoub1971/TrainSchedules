@@ -1,0 +1,58 @@
+.profile-card {
+    -fx-background-color: #424344;
+    -fx-background-radius: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0, 0, 0);
+}
+
+.title-label {
+    -fx-text-fill: #da9020;
+}
+
+.field-label {
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+}
+
+.profile-field {
+    -fx-background-color: #2e2f30;
+    -fx-text-fill: white;
+    -fx-prompt-text-fill: #808080;
+    -fx-font-size: 14px;
+    -fx-padding: 8 12;
+    -fx-background-radius: 5;
+    -fx-border-color: #808080;
+    -fx-border-radius: 5;
+}
+
+.profile-field:focused {
+    -fx-border-color: #da9020;
+}
+
+.save-button {
+    -fx-background-color: #da9020;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 8 20;
+    -fx-background-radius: 5;
+    -fx-cursor: hand;
+}
+
+.save-button:hover {
+    -fx-background-color: derive(#da9020, 10%);
+}
+
+.cancel-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #808080;
+    -fx-font-size: 14px;
+    -fx-padding: 8 20;
+    -fx-background-radius: 5;
+    -fx-border-color: #808080;
+    -fx-border-radius: 5;
+    -fx-cursor: hand;
+}
+
+.cancel-button:hover {
+    -fx-text-fill: white;
+    -fx-border-color: white;
+}

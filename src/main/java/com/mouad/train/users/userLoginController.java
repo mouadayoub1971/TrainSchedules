@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.PathVariable;
 import java.util.Collections;
 
 @RestController
@@ -32,7 +33,7 @@ public class userLoginController {
                         "INFO", "LoginController", "Login attempt failed: Email is required", null
                 );
                 kafkaProducer.sendMessage(logMessage);
-                return ResponseEntity.badRequest().body(new LoginResponse("Email is required", false, null, null, null));
+                return ResponseEntity.badRequest().body(new LoginResponse("Email is required", false, null, null, null, null));
             }
 
             // Validate password
@@ -41,7 +42,7 @@ public class userLoginController {
                         "INFO", "LoginController", "Login attempt failed: Password is required", null
                 );
                 kafkaProducer.sendMessage(logMessage);
-                return ResponseEntity.badRequest().body(new LoginResponse("Password is required", false, null, null, null));
+                return ResponseEntity.badRequest().body(new LoginResponse("Password is required", false, null, null, null, null));
             }
 
             // Find user by email
@@ -68,7 +69,8 @@ public class userLoginController {
                                 existingUser.getAdmin(),
                                 existingUser.getEmail(),
                                 existingUser.getFirstName(),
-                                existingUser.getSecondName()
+                                existingUser.getSecondName(),
+                                existingUser.getId()
                         ));
             }
 
@@ -82,7 +84,7 @@ public class userLoginController {
                 );
                 kafkaProducer.sendMessage(logMessage);
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body(new LoginResponse("Invalid password", false, null, null, null));
+                        .body(new LoginResponse("Invalid password", false, null, null, null, null));
             }
 
             // Successful login
@@ -94,13 +96,19 @@ public class userLoginController {
             );
             kafkaProducer.sendMessage(loginMessage);
             
-            return ResponseEntity.ok(new LoginResponse(
+            LoginResponse response = new LoginResponse(
                 "Login successful",
                 existingUser.getAdmin(),
                 existingUser.getEmail(),
                 existingUser.getFirstName(),
-                existingUser.getSecondName()
-            ));
+                existingUser.getSecondName(),
+                existingUser.getId()
+            );
+            
+            // Log the response for debugging
+            System.out.println("Login response: " + objectMapper.writeValueAsString(response));
+            
+            return ResponseEntity.ok(response);
 
         } catch (Exception e) {
             String errorMessage = logsGene.generateLog(
@@ -111,7 +119,56 @@ public class userLoginController {
             );
             kafkaProducer.sendMessage(errorMessage);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(new LoginResponse("An error occurred during login", false, null, null, null));
+                    .body(new LoginResponse("An error occurred during login", false, null, null, null, null));
+        }
+    }
+
+    @PostMapping("/users/update/{id}")
+    public ResponseEntity<LoginResponse> updateUser(@PathVariable Integer id, @RequestBody User updatedUser) {
+        try {
+            // Find the existing user
+            User existingUser = repo.findById(id).orElse(null);
+            if (existingUser == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new LoginResponse("User not found", false, null, null, null, null));
+            }
+
+            // Update user fields if provided
+            if (updatedUser.getFirstName() != null) {
+                existingUser.setFirstName(updatedUser.getFirstName());
+            }
+            if (updatedUser.getSecondName() != null) {
+                existingUser.setSecondName(updatedUser.getSecondName());
+            }
+            if (updatedUser.getEmail() != null) {
+                // Check if email is already taken by another user
+                User userWithEmail = repo.findByEmail(updatedUser.getEmail());
+                if (userWithEmail != null && !userWithEmail.getId().equals(id)) {
+                    return ResponseEntity.badRequest()
+                        .body(new LoginResponse("Email already exists", false, null, null, null, null));
+                }
+                existingUser.setEmail(updatedUser.getEmail());
+            }
+            if (updatedUser.getPassword() != null && !updatedUser.getPassword().isEmpty()) {
+                existingUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+            }
+
+            // Save the updated user
+            User savedUser = repo.save(existingUser);
+
+            // Return the updated user info
+            return ResponseEntity.ok(new LoginResponse(
+                "User updated successfully",
+                savedUser.getAdmin(),
+                savedUser.getEmail(),
+                savedUser.getFirstName(),
+                savedUser.getSecondName(),
+                savedUser.getId()
+            ));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new LoginResponse("Error updating user: " + e.getMessage(), false, null, null, null, null));
         }
     }
 

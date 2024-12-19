@@ -49,7 +49,7 @@ public class ScheduleDialogController {
             setupButtons();
         } catch (Exception e) {
             System.err.println("Error initializing dialog: " + e.getMessage());
-            showAlert("Error", "Failed to initialize dialog: " + e.getMessage(), Alert.AlertType.ERROR);
+            CustomAlert.showError("Error", "Failed to initialize dialog: " + e.getMessage());
         }
     }
 
@@ -87,26 +87,47 @@ public class ScheduleDialogController {
             }
         } catch (Exception e) {
             System.err.println("Error loading trains: " + e.getMessage());
-            showAlert("Error", "Failed to load trains: " + e.getMessage(), Alert.AlertType.ERROR);
+            CustomAlert.showError("Error", "Failed to load trains: " + e.getMessage());
         }
     }
 
     private void setupValidation() {
+        // Setup time field validation and formatting for departure time
         departureTimeField.setTextFormatter(new TextFormatter<>(change -> {
             String newText = change.getControlNewText();
-            if (newText.matches("^(0?[0-9]|1[0-9]|2[0-3])?:?(0?[0-9]|[0-5][0-9])?$") || newText.isEmpty()) {
+            if (newText.matches("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$") || // Complete time (HH:mm)
+                newText.matches("^([0-1]?[0-9]|2[0-3])$") || // Hours only
+                newText.matches("^([0-1]?[0-9]|2[0-3]):([0-5])?$") || // Hours with colon and optional first minute digit
+                newText.isEmpty()) { // Empty field
                 return change;
             }
             return null;
         }));
 
+        // Setup time field validation and formatting for arrival time
         arrivalTimeField.setTextFormatter(new TextFormatter<>(change -> {
             String newText = change.getControlNewText();
-            if (newText.matches("^(0?[0-9]|1[0-9]|2[0-3])?:?(0?[0-9]|[0-5][0-9])?$") || newText.isEmpty()) {
+            if (newText.matches("^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$") || // Complete time (HH:mm)
+                newText.matches("^([0-1]?[0-9]|2[0-3])$") || // Hours only
+                newText.matches("^([0-1]?[0-9]|2[0-3]):([0-5])?$") || // Hours with colon and optional first minute digit
+                newText.isEmpty()) { // Empty field
                 return change;
             }
             return null;
         }));
+
+        // Add focus listeners to format time when leaving the field
+        departureTimeField.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if (!isNowFocused) {
+                formatTimeField(departureTimeField);
+            }
+        });
+
+        arrivalTimeField.focusedProperty().addListener((obs, wasFocused, isNowFocused) -> {
+            if (!isNowFocused) {
+                formatTimeField(arrivalTimeField);
+            }
+        });
 
         costField.setTextFormatter(new TextFormatter<>(change -> {
             String newText = change.getControlNewText();
@@ -115,6 +136,43 @@ public class ScheduleDialogController {
             }
             return null;
         }));
+    }
+
+    private void formatTimeField(TextField timeField) {
+        String text = timeField.getText().trim();
+        if (!text.isEmpty()) {
+            // Handle just hours
+            if (text.matches("^[0-9]{1,2}$")) {
+                int hours = Integer.parseInt(text);
+                if (hours >= 0 && hours <= 23) {
+                    timeField.setText(String.format("%02d:00", hours));
+                }
+            }
+            // Handle hours with colon
+            else if (text.matches("^[0-9]{1,2}:$")) {
+                int hours = Integer.parseInt(text.replace(":", ""));
+                if (hours >= 0 && hours <= 23) {
+                    timeField.setText(String.format("%02d:00", hours));
+                }
+            }
+            // Handle partial minutes
+            else if (text.matches("^[0-9]{1,2}:[0-9]$")) {
+                String[] parts = text.split(":");
+                int hours = Integer.parseInt(parts[0]);
+                if (hours >= 0 && hours <= 23) {
+                    timeField.setText(String.format("%02d:%s0", hours, parts[1]));
+                }
+            }
+            // Handle complete time but ensure proper formatting
+            else if (text.matches("^[0-9]{1,2}:[0-9]{2}$")) {
+                String[] parts = text.split(":");
+                int hours = Integer.parseInt(parts[0]);
+                int minutes = Integer.parseInt(parts[1]);
+                if (hours >= 0 && hours <= 23 && minutes >= 0 && minutes <= 59) {
+                    timeField.setText(String.format("%02d:%02d", hours, minutes));
+                }
+            }
+        }
     }
 
     private void setupButtons() {
@@ -197,7 +255,7 @@ public class ScheduleDialogController {
 
         } catch (Exception e) {
             System.err.println("Error saving schedule: " + e.getMessage());
-            showAlert("Error", "Failed to save schedule: " + e.getMessage(), Alert.AlertType.ERROR);
+            CustomAlert.showError("Error", "Failed to save schedule: " + e.getMessage());
         }
     }
 
@@ -230,7 +288,7 @@ public class ScheduleDialogController {
         }
 
         if (errorMessage.length() > 0) {
-            showAlert("Validation Error", errorMessage.toString(), Alert.AlertType.ERROR);
+            CustomAlert.showError("Validation Error", errorMessage.toString());
             return false;
         }
 
@@ -245,7 +303,7 @@ public class ScheduleDialogController {
         );
 
         if (arrivalDateTime.isBefore(departureDateTime) || arrivalDateTime.equals(departureDateTime)) {
-            showAlert("Validation Error", "Arrival time must be after departure time", Alert.AlertType.ERROR);
+            CustomAlert.showError("Validation Error", "Arrival time must be after departure time");
             return false;
         }
 

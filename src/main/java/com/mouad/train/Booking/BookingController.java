@@ -70,6 +70,30 @@ public class BookingController {
         }
     }
 
+    // Get bookings by user ID
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getBookingsByUserId(@PathVariable Integer userId) {
+        try {
+            User user = validateUser(userId);
+            List<Booking> bookings = bookingRepository.findByUser(user);
+            return ResponseEntity.ok(bookings);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
+    // Get active bookings by user ID
+    @GetMapping("/user/{userId}/active")
+    public ResponseEntity<?> getActiveBookingsByUserId(@PathVariable Integer userId) {
+        try {
+            User user = validateUser(userId);
+            List<Booking> activeBookings = bookingRepository.findByUserAndStatus(user, Enums.BookingStatus.CONFIRMED);
+            return ResponseEntity.ok(activeBookings);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+    }
+
     // Create booking
     @PostMapping
     public ResponseEntity<?> createBooking(@RequestBody Booking bookingRequest) {
@@ -150,7 +174,7 @@ public class BookingController {
             existingBooking.setSchedule(schedule);
             existingBooking.setNumberOfSeats(bookingRequest.getNumberOfSeats());
             existingBooking.setBookingTime(LocalDateTime.now());
-            existingBooking.setStatus(bookingRequest.getStatus());
+            existingBooking.setStatus(Enums.BookingStatus.CONFIRMED);
 
             Booking updatedBooking = bookingRepository.save(existingBooking);
 
@@ -272,26 +296,60 @@ public class BookingController {
     }
 
     // Get total number of bookings
-    @GetMapping("/stats/count")
-    public ResponseEntity<?> getTotalBookings() {
+    @GetMapping("/stats/total")
+    public ResponseEntity<?> getTotalBookingsCount() {
         try {
-            int totalBookings = bookingRepository.findAll().size();
-            return ResponseEntity.ok(totalBookings);
+            long totalBookings = bookingRepository.count();
+            return ResponseEntity.ok(new BookingStats("Total bookings", totalBookings));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(0);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error getting total bookings count: " + e.getMessage());
         }
     }
 
     // Get number of active bookings
     @GetMapping("/stats/active")
-    public ResponseEntity<?> getActiveBookings() {
+    public ResponseEntity<?> getActiveBookingsCount() {
         try {
-            long activeBookings = bookingRepository.findAll().stream()
-                    .filter(booking -> booking.getStatus() == Enums.BookingStatus.CONFIRMED)
-                    .count();
-            return ResponseEntity.ok((int) activeBookings);
+            long activeBookings = bookingRepository.countByStatus(Enums.BookingStatus.CONFIRMED);
+            return ResponseEntity.ok(new BookingStats("Active bookings", activeBookings));
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(0);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error getting active bookings count: " + e.getMessage());
+        }
+    }
+
+    // Get today's bookings
+    @GetMapping("/stats/today")
+    public ResponseEntity<?> getTodayBookings() {
+        try {
+            LocalDateTime startOfDay = LocalDateTime.now().withHour(0).withMinute(0).withSecond(0).withNano(0);
+            LocalDateTime endOfDay = startOfDay.plusDays(1).minusNanos(1);
+            
+            List<Booking> todayBookings = bookingRepository.findByBookingTimeBetween(startOfDay, endOfDay);
+            return ResponseEntity.ok(new BookingStats("Today's bookings", todayBookings.size()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error getting today's bookings: " + e.getMessage());
+        }
+    }
+
+    // Helper class for booking statistics
+    private static class BookingStats {
+        private String label;
+        private long count;
+
+        public BookingStats(String label, long count) {
+            this.label = label;
+            this.count = count;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public long getCount() {
+            return count;
         }
     }
 

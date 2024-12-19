@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.stream.Collectors;
 
 public class ViewsFactory {
-    public ViewsFactory() {}
+    
     public static FXMLLoader loadFXML(String fxmlPath) throws IOException {
         URL fxmlUrl = ViewsFactory.class.getResource("/Fxml/" + fxmlPath);
         if (fxmlUrl == null) {
@@ -111,6 +111,5 @@ public class ViewsFactory {
             System.err.println("Error showing login page: " + e.getMessage());
             e.printStackTrace();
         }
-
     }
 }
